@@ -1,10 +1,19 @@
+Gull 2.3 @ 17.10.2013
+	Minor search tweaks.
+
+Gull 2.2 @ 17.08.2013
+	Improved king safety evaluation.
+	Quadratic PST optimized with the use of automated tuning.
+	Several SMP bugs fixed.
+	Time management bug (pondering mode) fixed.
+
 Gull 2.1 @ 17.06.2013
 	Evaluation weights are optimized with the use of automated tuning (source code included). 
 	Gull's evaluation is no longer almost identical to that of Ivanhoe. 
 	Minor search & time management & SMP efficiency enhancements.
 
 	On SMP & Hyper-Threading:
-		By default Gull limits the number of processes to the number of phisical CPU cores availible.
+		By default Gull limits the number of processes to the number of physical CPU cores availible.
 		This is done in order to avoid ELO drop due to significant SMP search overhead at bullet time controls. 
 		However for long games & analysis it is recommended to turn HT on and manually set the number of processes (UCI option "Threads")  
 		to equal the number of logical CPUs.
