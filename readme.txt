@@ -1,87 +1,42 @@
-Gull 1.2
+Gull 2.1 @ 17.06.2013
+	Evaluation weights are optimized with the use of automated tuning (source code included). 
+	Gull's evaluation is no longer almost identical to that of Ivanhoe. 
+	Minor search & time management & SMP efficiency enhancements.
 
-Features:
-    -"movetime" option
+	On SMP & Hyper-Threading:
+		By default Gull limits the number of processes to the number of phisical CPU cores availible.
+		This is done in order to avoid ELO drop due to significant SMP search overhead at bullet time controls. 
+		However for long games & analysis it is recommended to turn HT on and manually set the number of processes (UCI option "Threads")  
+		to equal the number of logical CPUs.
 
-Algorithms:
-    -significantly improved evaluation
-    -refined search
-    -several minor bugfixes
+	On the automated tuning (technical):
+		Tuning is done in two steps:
+		1. an estimate of the gradient is calculated;
+		2. line search is performed.
+	 	SPSA (just move a bit along the gradient direction instead of performing a line search) may also be quite effective, 
+		though it's difficult to pick good parameters.
+		Fairly simple exit criteria are used for the line search. I don't employ SPRT because it's guaranteed to be optimal only for 
+		elo=elo1 vs elo=elo0 hypothesis, whereas in this case we are interested in elo>elo0 vs elo<=elo0 test. However it's still possible
+		for SPRT (or some other test) to be better for some elo-elo0 values. Shouldn't be very difficult to run a numerical comparision
+		between various tests.	  
 
-Code: still less than 6000 lines!
+Gull II @ 20.12.2012
+	Slightly modified eval & search. 
+	Significantly improved parallel search efficiency at long time controls.   
 
-Gull 1.1
+Gull II beta2 @ 17.07.2012
+	Compatibility with XP finally fixed. +Knight underpromotion bug fixed. 
+	The change in playing strength should be negligible.
 
-Features:
-    -"searchmoves" command support
-    -"Clear Hash" command support
-    -Tunable version with some additional UCI parameters. 
-        It's slightly slower than the standart version, so the latter is better for engine vs engine matches.
-    -"+-/=/-+ Evaluation" command: force evaluation of the current position (tunable version only)
-    
-Algorithms:
-    -improved mobility evaluation
-    -improved outpost evaluation
-    -improved pawn structure evaluation
-    -tuned prunings
-    -quiet moves in the quiescence search
-    -improved hashing & IID
+Gull II beta xp @ 17.07.2012
+	Compatibility with Windows XP fixed. No need for update if you use Vista/7/8.
+	Still Gull will not run under any Windows older than XP.
 
-Switches:
-    -TUNABLE - standart/tunable compile
-    -KNS_TESTING - special testing mode with fixed number of nodes per move
+Gull II beta @ 16.07.2012
+	A derivative of Gull 1.2 (program structure, board representation, move generators etc.) & Ivanhoe (versions 63 & 46: evaluation). 
+	Whether future versions will retain Ivanhoe's evaluation is still undecided. 
 
-Gull 1.0a
+	Gull II beta supports multi-core CPUs. For now parallel algorithms are pretty basic, and performance gain isn't very good. 
+	P.S. Gull employs processes instead of threads for the sake of code simplicity.
 
-Bugfix:
-    -UCI handling bug fixed. This bug occured only in "ponder on" games without adjudication.  
-  
-Gull 1.0
-
-Features:
-    -Ponder support
-    -MultiPV support
-    -"bench 'depth'" command
-
-Algorithms:
-    -magic move generation
-    -array of attacks
-    -aspiration search
-    -IID
-    -mvv/lva + SEE
-    -history heuristic
-    -killer heuristic
-    -LMR
-    -null move pruning
-    -history pruning
-    -razoring
-    -static null move pruning
-    -check extension
-    -passed pawn push extension
-    -good capture (PV) extension
-    -singular move extension
-    -quiescence delta pruning
-    -quiescence checks
-    -PV hashing
-    
-Code:
-    Gull is designed to provide maximum (ELO/coding effort) ratio. 
-    All the code (less than 5000 lines) is contained in a single file.
-    Hence it compiles faster, and switching between versions is easier.
-
-    Some features (like ->mul and ->positional_score fields of the GData structure)
-    aren't used by the current version but will probably be utilized later.
-
-Switches:
-    W32_BUILD - must be on for 32-bit version and off for x64
-    GEN_MAGICS - turns on the magic number generator
-    CPU_TIMING - the engine calculates nps using CPU time when benching.
-                 However I'm not sure whether this feature works properly or not
-    EPD_TESTING - allows to run a epd test (with "epd 'file'" command)
-                  The file must contain pure FEN strings only (without comments or "bm" tag).
-                  The test is useful for performance estimation when tuning search heuristics
-    ASPIRATION - turns on the aspiration search heuristic
-
-Contact:
-    thinkingalot.chess@gmail.com, Vadim Demichev
-    
+	P.P.S. This version may be buggy (tested only on my home PC). That's why it is a beta :) 
