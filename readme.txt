@@ -1,3 +1,41 @@
+Gull 1.2
+
+Features:
+    -"movetime" option
+
+Algorithms:
+    -significantly improved evaluation
+    -refined search
+    -several minor bugfixes
+
+Code: still less than 6000 lines!
+
+Gull 1.1
+
+Features:
+    -"searchmoves" command support
+    -"Clear Hash" command support
+    -Tunable version with some additional UCI parameters. 
+        It's slightly slower than the standart version, so the latter is better for engine vs engine matches.
+    -"+-/=/-+ Evaluation" command: force evaluation of the current position (tunable version only)
+    
+Algorithms:
+    -improved mobility evaluation
+    -improved outpost evaluation
+    -improved pawn structure evaluation
+    -tuned prunings
+    -quiet moves in the quiescence search
+    -improved hashing & IID
+
+Switches:
+    -TUNABLE - standart/tunable compile
+    -KNS_TESTING - special testing mode with fixed number of nodes per move
+
+Gull 1.0a
+
+Bugfix:
+    -UCI handling bug fixed. This bug occured only in "ponder on" games without adjudication.  
+  
 Gull 1.0
 
 Features:

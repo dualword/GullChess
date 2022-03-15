@@ -9,6 +9,9 @@
 #define GEN_MAGICS
 #undef GEN_MAGICS
 
+#define TUNABLE
+#undef TUNABLE
+
 #define CPU_TIMING
 #undef CPU_TIMING
 
@@ -16,7 +19,22 @@
 #undef EPD_TESTING
 
 #define ASPIRATION
+#ifndef TUNABLE
 //#undef ASPIRATION
+#endif
+
+#define KNS_TESTING
+#undef KNS_TESTING
+
+#define USE_LARGE_PAGES
+//#undef USE_LARGE_PAGES
+
+#ifdef KNS_TESTING
+#ifdef ASPIRATION
+#undef ASPIRATION
+#endif
+#define KN_FACTOR 8
+#endif
 
 #define uint8 unsigned __int8
 #define sint8 __int8
@@ -62,7 +80,9 @@
 #define Interior Convert(0x007E7E7E7E7E7E00,uint64)
 #define Boundary (~Interior)
 #define WhiteArea Convert(0x00000000FFFFFFFF,uint64)
-#define BLackArea Convert(0xFFFFFFFF00000000,uint64)
+#define BlackArea (~WhiteArea)
+#define LightArea Convert(0x55AA55AA55AA55AA,uint64)
+#define DarkArea (~LightArea)
 #define FileA Convert(0x0101010101010101,uint64)
 #define Line0 Convert(0x00000000000000FF,uint64)
 
@@ -110,16 +130,36 @@
 #define OutputDepth(depth) (((depth) - 16)/2)
 #define StartPos "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
-#define B1 "2b1rrk1/2q1n1bp/3p2p1/1pnPpp2/p1p1P2N/P1P1BN1P/1PB1QPP1/3RR1K1 w - f6 0 21"
-#define B2 "5r2/6kr/3p4/1p6/p2qp1P1/P1P2p1P/1P5R/4R1K1 w - - 0 47"
-#define B3 "r1b2rk1/2qnppbp/2np2p1/ppp5/3PP3/P1P1BN1P/1PBN1PP1/R2Q1RK1 b - - 0 12"
-#define B4 "r2n1rk1/1bq2pbp/3p2p1/p1pp2Bn/PpP1P3/5N1P/RPB2PP1/1N1QR1K1 w - - 0 18"
-#define B5 "3rk3/1pqbbpp1/2p1p2r/4Nn2/p2P1P2/P2B1Qp1/1PP2B2/1K2R2R w - - 0 23"
-#define B6 "4rbk1/5pp1/6qp/2pn4/1p1P4/2P3P1/1P1B1P1P/R2Q1NK1 w - - 0 31"
-#define B7 "4rbk1/R4pp1/4n2p/8/3B2Q1/1qP3P1/5P1P/5NK1 w - - 0 41"
-#define B8 "2r4k/q6p/3p1rp1/p2Bp3/8/1PPQbPP1/2R3KP/3R4 b - - 0 32"
-#define B9 "1rbq1r1k/5p1p/2np2p1/p2N4/R1B1PP1b/1PP1N3/8/3QK2R w K - 0 22"
-#define B10 "1r2r2k/4Npbp/p2pb3/q3p2Q/1nB1Pp2/NP6/P4PPP/2R2RK1 w - - 0 21"
+#define B1 "r4rk1/ppp2p2/1bnpbq1p/4p1p1/2B1Pn2/2PP2B1/PPNNQPPP/R4RK1 w - - 0 14"
+#define B2 "1r6/1p1n4/3p2r1/pP2p2k/P3Pp1p/3N1P1P/R5P1/2R4K w - - 0 36"
+#define B3 "7R/3k4/3p4/4p3/Pr2Pp1p/5P1P/6PK/8 w - - 0 56"
+#define B4 "2r2rk1/1bq1npp1/p1n1p2p/1pp1P3/4B3/P1N2N2/1PP1QPPP/3RR1K1 b - - 0 15"
+#define B5 "7k/2qr1pp1/p3p2p/n3P3/P1p3Q1/1pPnNN1P/1P3PP1/1R4K1 w - - 0 33"
+#define B6 "7k/5Qp1/pq2n2p/n2rPN2/2p3N1/1pP4P/1P4PK/1R6 b - - 0 46"
+#define B7 "rn1r2k1/1p3p1p/1p1b2p1/2ppN3/3PnP2/P1PR3B/1P4PP/R1B3K1 w - - 0 19"
+#define B8 "1r6/5pk1/8/2N4p/3p1Pp1/2p1n1P1/4B2P/2R3K1 w - - 0 41"
+#define B9 "rr4k1/2q1bpp1/2ppn2p/p3p3/PPQ1P3/2P1BN1P/5PP1/R2R2K1 w - - 0 21"
+#define B10 "3r2k1/4qpp1/PP3n1p/1QN1p3/2P1P3/7P/5PP1/6K1 w - - 0 37"
+#define B11 "r1b1k2r/1pqpb1pp/p1n1pn2/5p2/1PP5/P1N1PN2/1B3PPP/R2QKB1R w KQkq - 0 10"
+#define B12 "1r4k1/1p5p/4pq1r/1PPp1p1b/R7/1N2P1P1/3Q3P/2R3K1 b - - 0 37"
+#define B13 "4b1k1/2q5/4R3/3p1p2/4r3/4PNP1/5K2/Q7 w - - 0 52"
+#define B14 "r4rk1/pp1bppbp/1q1p1np1/4n3/2PNP3/2N1BP2/PP1QB1PP/R4RK1 b - - 0 12"
+#define B15 "4r3/1pqbrpkp/3p1pp1/4n3/pPPNP3/P4P1P/3Q2P1/2R1RB1K b - - 0 36"
+#define B16 "2r5/7p/1p5k/1P3pp1/2P1bP2/P3R1KP/6P1/5B2 b - - 0 61"
+#define B17 "8/8/PR6/1P2k3/2P5/7r/2K5/8 b - - 0 80"
+#define B18 "3rqbk1/1p4p1/r3ppNp/3n4/1nNB1P2/4P1Q1/1R4PP/1R4K1 b - - 0 28"
+#define B19 "r3r1k1/pp2ppbp/2b1n1p1/q1pNn3/2P1P3/1P2B2P/P1Q1BPP1/1R1RN1K1 b - - 0 18"
+#define B20 "8/7p/p1pk2p1/4pp2/2P2n1P/1PN2PP1/P4K2/8 b - - 0 44"
+#define B21 "8/8/p3pk1p/5pp1/2PK4/1P4P1/P7/8 w - - 0 0"
+#define B22 "r5k1/q2b1ppp/2p2n2/Pr1p4/1P1Rp3/1NQ1P1P1/5PBP/R5K1 b - - 0 25"
+#define B23 "r1bqk2r/pp2bppp/2n5/3pp2n/1P6/2PQBNP1/P3PPBP/RN3RK1 w kq - 0 12"
+#define B24 "5k2/8/5pb1/8/3n1KBR/7P/8/8 b - - 0 73"
+#define B25 "r2q1rk1/2p1npp1/1pbppn1p/2P5/P2P4/4PN1P/PB2BPP1/R2Q1RK1 w - - 0 15"
+#define B26 "8/r4pk1/4p2p/2Np2p1/3P2P1/1R1BP1KP/nn1r1P2/R7 w - - 0 45"
+#define B27 "3q1rk1/p1rnppbp/Bpbp2p1/2p5/3P4/2P1P2P/PP1NQPPB/2R2RK1 w - - 0 16"
+#define B28 "3r2k1/p4q2/2R2pp1/3n4/3B4/r1P2Q2/6P1/5RK1 w - - 0 42"
+#define B29 "2r2rk1/pp1nbpp1/2p1pn1p/q1Pp1b2/3P4/1P1N2P1/PB1NPPBP/R2Q1RK1 w - - 0 13"
+#define B30 "1r1q2k1/pP3p2/B2np3/3p4/3P4/6P1/1Q4KP/2R5 w - - 0 39"
 
 #define MatWQ 1
 #define MatBQ 3
@@ -137,7 +177,7 @@
 #define FlagUnusualMaterial (1 << 30)
 // stored in the material field of GData structure
 
-#define halt_check if ((Current - Data) >= 127) {evaluate(); return Current->total_score;} \
+#define halt_check if ((Current - Data) >= 126) {evaluate(); return Current->score;} \
     if (Current->ply > 100) return 0; \
 	for (i = 4; i <= Current->ply; i+= 2) if (Stack[sp-i] == Current->key) return 0
 
@@ -248,6 +288,10 @@ const int ROffset[64] = {
 #define FlagCallEvaluation (1 << 18)
 #define FlagNullSearch (1 << 19)
 #define FlagNeatSearch (FlagHashCheck | FlagHaltCheck | FlagCallEvaluation)
+#define FlagDisableDelta (1 << 20)
+#define FlagOnlyCaptures (1 << 21)
+
+#define FlagSkipBadChecks (1 << 0)
 
 const int PawnFile[8] = {-3, -1, 0, 1, 1, 0, -1, -3};
 const int KnightCenter[8] = {-3, -1, 0, 1, 1, 0, -1, -3};
@@ -279,70 +323,81 @@ const int KingCenter[8] = {-3, -1, 0, 1, 1, 0, -1, -3};
 #define PawnValueEg 100
 #define KnightValue 325
 #define BishopValue 325
-#define RookValue 500
+#define RookValue 515
 #define QueenValue 975
 #define MateValue 32760
 #define EvalValue 30000
 
-#define BishopMobMinor Compose(3, 2)
-#define BishopMobMajor Compose(7, 4)
-#define KnightMobility Compose(5, 2)
-#define RookMobility Compose(3, 4)
-#define QueenMobility Compose(3, 2)
+#define KnightMobility Compose(5, 9) // tuned
+#define BishopMobility Compose(5, 5) // well tuned
+#define RookMobility Compose(2, 3) // tuned
+#define QueenMobility Compose(2, 2) // tuned
+int KnightOutpost[2][64]; // tuned
 
-#define KnightOutpost Compose(10, 5)
+// tuned
+#define KingQAttack Combine(1, 40)
+#define KingRAttack Combine(1, 25)
+#define KingBAttack Combine(1, 15)
+#define KingNAttack Combine(1, 15)
+#define KingAttack Combine(1, 0)
 
-#define BishopMajorWhite Convert(0x7EFFFF7E3C000000,uint64)
-#define BishopMinorWhite (~BishopMajorWhite)
-#define BishopMajorBlack Convert(0x0000003C7EFFFF7E,uint64)
-#define BishopMinorBlack (~BishopMajorBlack)
-
-#define KingQAttack Combine(1, 60)
-#define KingRAttack Combine(1, 30)
-#define KingBAttack Combine(1, 25)
-#define KingNAttack Combine(1, 35)
-#define KingPAttack Combine(1, 0)
-
-#define RookSeventhRank Compose(5, 20)
-#define RookHOFile Compose(2, 8)
-#define RookOFile Compose(7, 5)
+#define RookSeventhRank Compose(5, 20) // well tuned
+// hardly tuned
+#define RookHOF Compose(2, 3) 
+#define RookHOFPLook Compose(1, 2)
+#define RookHOFUPLook Compose(2, 3)
+#define RookOF Compose(8, 5)
+#define RookOFFreeLook Compose(4, 3)
+#define RookOFMinorPLook Compose(2, 0)
+#define RookOFMinorUPLook Compose(10, 15)
 #define RookOFKingAtt Compose(15, 0)
 #define RookKingLook Compose(10, 0)
 
-const int KingAttackScale[16] = {0, 1, 4, 8, 13, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16};
-const int AdvantageScale[16] = {16, 15, 14, 12, 9, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5};
+#define PieceOutpost Compose(4, 2) // hardly tuned
+#define PieceHanging Compose(9, 5) // tuned
+#define PieceUPAttack Compose(7, 10) // tuned
+
+const int KingAttackScale[16] = {0, 1, 4, 9, 16, 25, 36, 49, 64, 64, 64, 64, 64, 64, 64, 64}; // tuned
+const int ThreatScale[9] = {0, Compose(20,30), Compose(160,240), Compose(480,720), Compose(480,720), // tuned, though the values are ridiculous...
+	Compose(480,720), Compose(480,720), Compose(480,720), Compose(480,720)};
+const int AdvantageScale[16] = {16, 15, 14, 12, 9, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5}; // tuned
+#ifdef TUNABLE
+const int SpaceScore[16] = {0, 0, 5, 15, 30, 50, 70, 100, 130, 160, 190, 220, 250, 280, 310, 340};  
+#endif
 const int SEEValue[16] = {0, 0, 1, 1, 3, 3, 3, 3, 3, 3, 5, 5, 10, 10, 1000, 1000};
-const int MinCapture[16] = {4, 4, 4, 4, 10, 10, 10, 10, 10, 10, 16, 16, 4, 4};
-const int BishopPair[9] = {20, 30, 40, 50, 60, 50, 40, 30, 20}; 
+const int BishopPair[9] = {70, 65, 60, 55, 50, 45, 40, 35, 30}; // hardly tuned
 
-const int Shelter[3][8] = {
-	0, 24, 13, 11, 6, 3, 1, 0,
-	0, 36, 25, 16, 9, 4, 1, 0,
-	0, 48, 33, 21, 12, 5, 1, 0
+const int Shelter[3][8] = { // tuned
+	0, 24, 17, 5, 3, 2, 1, 0,
+	0, 36, 25, 8, 4, 2, 1, 0,
+	0, 48, 33, 11, 5, 2, 1, 0
 };
-const int Storm[8] = {
-	0, 0, 0, 6, 10, 12, 15, 0
+const int Storm[8] = { // hardly tuned
+	0, 0, 0, 6, 10, 13, 15, 0
 };
-#define PawnUP Compose(5,5)
-const int PawnWeak[8] = {
-	0, Compose(15,10), Compose(10,5), Compose(7,4), Compose(10,5), Compose(12,6), 0, 0
-};
-const int PawnWeakOp[8] = {
-	0, Compose(10,0), Compose(10,0), Compose(8,0), Compose(6,0), Compose(5,0), 0, 0
-};
-#define PawnDoubled Compose(5,7)
-#define PawnIsolated Compose(5,0)
+#define KingBlocked Compose(7, 15) // hardly tuned
 
-const int Passer[8] = {0, Compose(1,3), Compose(4,5), Compose(10,10), Compose(25,20), Compose(60,40), Compose(90,60), 0};
+//tuned
+const int PawnUP[8] = {0, Compose(2, 3), Compose(4, 4), Compose(6, 5), Compose(7, 5), Compose(8, 6), 0};
+const int PawnUR[8] = {0, 0, Compose(2, 2), Compose(3, 2), Compose(4, 3), Compose(4, 3), Compose(4, 3), 0}; 
+const int PawnWeak[8] = {0, Compose(15, 10), Compose(10, 7), Compose(7, 5), Compose(7, 5), Compose(10, 7), 0, 0};
+const int PawnWeakOp[8] = {0, Compose(15, 0), Compose(12, 0), Compose(10, 0), Compose(8, 0), Compose(6, 0), 0, 0};
+const int PawnIsolated[8] = {0, Compose(2, 3), Compose(4, 4), Compose(4, 4), Compose(4, 4), Compose(4, 4), Compose(4, 4), 0};
+#define PawnDoubled Compose(5, 7)
+
+const int Passer[8] = {0, Compose(1,3), Compose(4,5), Compose(10,10), Compose(25,20), Compose(60,40), Compose(90,60), 0}; // tuned
+// hardly tuned
 const int NoSelfPasserBlock[8] = {0, 0, 0, 0, Compose(0,1), Compose(1,4), Compose(3,8), 0};
 const int NoOppPasserBlock[8] = {0, 0, Compose(0,1), Compose(1,3), Compose(3,10), Compose(8,25), Compose(15,45), 0};
 const int RookPasserBlock[8] = {0, 0, 0, Compose(0,2), Compose(0,8), Compose(0,16), Compose(0,20), 0};
+const int PasserPush[8] = {0, 0, 0, Compose(1,2), Compose(2, 3), Compose(3, 5), Compose(5, 8), 0};
 const int FreePasser[8] = {0, 0, Compose(0,1), Compose(1,3), Compose(5,10), Compose(10,20), Compose(20,40), 0};
+const int RagingPasser[8] = {0, 0, 0, Compose(0,1), Compose(3,7), Compose(7,14), Compose(14,28), 0};  
 const int PasserDef[8] = {0, 0, Compose(0,1), Compose(0,3), Compose(0,7), Compose(0,12), Compose(0,20), 0};
 const int PasserAtt[8] = {0, Compose(0,1), Compose(0,2), Compose(0,6), Compose(0,14), Compose(0,24), Compose(0,40), 0};
-const int DistantPasser[8] = {0, Compose(0,1), Compose(0,2), Compose(0,5), Compose(0,10), Compose(0,15), Compose(0,20), 0};
+const int DistantPasser[8] = {0, Compose(0,1), Compose(0,2), Compose(0,4), Compose(0,8), Compose(0,16), Compose(0,32), 0};
+// tuned
 const int ProtectedPasser[8] = {0, 0, Compose(0,2), Compose(2,3), Compose(3,5), Compose(6,10), Compose(12,20), 0};
-#define UnstoppablePasser Compose(0,500)
 
 #define ExclusionSingle 15
 #define ExclusionDouble 30
@@ -360,14 +415,16 @@ uint64 nodes, check_node;
 typedef struct {
 	uint64 attacks[64];
 	uint64 key, pawn_key, eval_key, all_att[2], pawn_att[2], passer, xray;
-	uint8 turn, capture, flags, ply, ep_square, mul;
-	sint16 total_score, positional_score;
+	uint8 turn, capture, flags, ply, ep_square, piece;
+	sint16 score;
+	uint16 move;
 	uint16 killer[3];
 	uint64 mask;
+	int margin, gen_flags;
 	int material, pst;
 	int *start, *current;
 	int stage;
-	int moves[241];
+	int moves[239];
 } GData;
 
 __declspec(align(64)) GData Data[128];
@@ -388,7 +445,13 @@ int hash_size = initial_hash_size;
 int hash_mask = (initial_hash_size - 4);
 GEntry * Hash;
 GEntry * HashBase;
+int init_flag = 0, virtual_mem = 0;
 uint32 date;
+#ifndef TUNABLE
+#define UpdateDate(old_date,new_date) (old_date = new_date)
+#else
+#define UpdateDate(old_date,new_date) if (old_date < new_date) old_date = new_date
+#endif
 
 typedef struct {
 	uint32 key;
@@ -416,6 +479,7 @@ typedef struct {
 GPVEntry PVHash[pv_hash_size + pv_cluster_size - 1];
 GPVEntry * PVEntry;
 
+uint64 Forward[2][8];
 uint64 HLine[64];
 uint64 VLine[64];
 uint64 NDiag[64];
@@ -446,6 +510,8 @@ uint32 Material[TotalMat];
 20 - 23 (4): unsigned black multiplier
 24 - 28 (5): unsigned phase
 29 - 32 (3): flags */
+#define MatLookForDrawW (1 << 29)
+#define MatLookForDrawB (1 << 30)
 int PST[16][64];
 
 uint64 seed = 1;
@@ -463,7 +529,7 @@ char input_string[65536];
 int MultiPV[256];
 int pvp;
 int pv_length;
-int best_move;
+int best_move, best_score;
 GBoard SaveBoard[1];
 GData SaveData[1];
 
@@ -478,6 +544,16 @@ uint16 History[16][64];
 #define HistoryBad(move,depth) \
 	if ((History[Board->square[From(move)]][To(move)] & 0x00FF) < MaxHistory) History[Board->square[From(move)]][To(move)] += HistoryLoss(depth); \
 	else History[Board->square[From(move)]][To(move)] = ((History[Board->square[From(move)]][To(move)] & 0xFEFE) >> 1) + HistoryLoss(depth)
+const int HistoryCnt[16] = {3, 4, 5, 6, 7, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255};
+#define HistoryMoveNb(depth) (HistoryCnt[Min(15, Max((depth) - 17, 0))])
+sint16 Delta[16][64];
+#define DeltaPM Delta[Current->piece][To(Current->move)]
+#define DeltaM(move) Delta[Board->square[From(move)]][To(move)]
+#define UpdateDelta \
+	if (DeltaPM > (-Current->score - (Current - 1)->score)) DeltaPM--; \
+	else DeltaPM = (-Current->score - (Current - 1)->score)
+#define UpdateDeltaM if (False(Current->capture) && False(Current->move & 0xE000) && False(flags & FlagDisableDelta) && True(Current->move)) UpdateDelta
+#define DeltaMargin(piece,to) (Delta[piece][to] > Current->margin)
 
 jmp_buf Jump;
 HANDLE StreamHandle; 
@@ -488,11 +564,14 @@ HANDLE CurrentHandle;
 #ifdef EPD_TESTING
 #include "math.h"
 #endif
-int Console;
+int Console, HardwarePopCnt;
 
 int TimeLimit1, TimeLimit2;
 int DepthLimit, LastDepth, LastTime;
-int PVN, Stop, Print, Infinite, Ponder, Searching, Bad, Change, Early, Easy;
+int PVN, Stop, Print, Infinite, MoveTime, SearchMoves, SMPointer, Ponder, Searching, Bad, Change, Early, Easy;
+#ifdef TUNABLE
+int Aspiration = 1, LMR = 1, PVHashing = 0, ExtendedInfo = 1, HalfPlySearch = 0, Space = 0, Favor = 0;
+#endif
 #define EasyMargin 4
 #define EarlyMargin 9
 #define NormalMargin 12
@@ -504,10 +583,15 @@ sint64 StartTime, InfoTime, CurrTime;
 #ifdef EPD_TESTING
 sint64 MaxNodes;
 #endif
+#ifdef KNS_TESTING
+sint64 NodeLimit = 0;
+#endif
+uint16 SMoves[256];
 
 inline unsigned long lsb(uint64 x);
 inline unsigned long msb(uint64 x);
 inline int popcnt(uint64 x);
+template <bool HPopCnt> int popcount(uint64 x);
 uint64 BMagicHash(int i, uint64 mask);
 uint64 RMagicHash(int i, uint64 mask);
 void init();
@@ -517,6 +601,7 @@ void init_keys();
 void init_material();
 void init_board();
 void init_board(const char fen[]);
+void init_hash();
 void move_to_string(int move, char string[]);
 int move_from_string(char string[]);
 void pick_pv();
@@ -527,6 +612,7 @@ void do_null();
 void undo_null();
 int * gen_captures(uint64 target, int * list);
 int * gen_quiet_moves(int * list);
+int * gen_delta_moves(int * list);
 int * gen_evasions(int * list);
 int * gen_checks(uint64 capture_target, int * list);
 int * gen_legal_moves();
@@ -534,12 +620,17 @@ int see(int move);
 int get_move();
 void get_attacks();
 void eval_pawns();
-void evaluate();
+template <bool HPopCnt> void evaluation();
+inline void evaluate();
 int is_legal(int move);
 void hash_high(int value, int depth);
 void hash_low(int move, int value, int depth);
 void hash_high_pv(int value, int depth);
 void hash_low_pv(int move, int value, int depth);
+#ifdef TUNABLE
+void hash_high_forced(int value);
+void hash_low_forced(int value);
+#endif
 void hash_exact(int move, int value, int depth);
 inline int extension(int move, int pv);
 inline int is_check(int move);
@@ -654,6 +745,10 @@ inline int popcnt(uint64 x) {
     x = (x + (x >> 4)) & 0x0f0f0f0f0f0f0f0f;
     return (x * 0x0101010101010101) >> 56;
 }
+
+template <bool HPopCnt> int popcount(uint64 x) {
+	return HPopCnt ? __popcnt64(x) : popcnt(x);
+}
 #else
 inline unsigned long lsb(uint64 x) {
     _asm {
@@ -692,6 +787,10 @@ inline int popcnt(uint64 x) {
     x2 = (x2 & 0x33333333) + ((x2 >> 2) & 0x33333333);
     x2 = (x2 + (x2 >> 4)) & 0x0F0F0F0F;
     return ((x1 * 0x01010101) >> 24) + ((x2 * 0x01010101) >> 24);
+}
+
+template <bool HPopCnt> int popcount(uint64 x) {
+	return HPopCnt ? (__popcnt((int)x) + __popcnt(x >> 32)) : popcnt(x);
 }
 #endif
 
@@ -876,6 +975,17 @@ void init() {
 			PST[j][i] = Compose(-op,-eg);
 		}
 	}
+	for (i = 0; i < 8; i++) {
+		Forward[0][i] = Forward[1][i] = 0;
+		for (j = 0; j < 8; j++) {
+			if (i < j) Forward[0][i] |= Line[j];
+			else if (i > j) Forward[1][i] |= Line[j];
+		}
+	}
+	for (i = 0; i < 64; i++) {
+		KnightOutpost[0][i] = Compose(Max(20, Opening(PST[WhiteKnight][i])) >> 2, Max(4, Endgame(PST[WhiteKnight][i])) >> 2);
+		KnightOutpost[1][i] = Compose(Max(20, -Opening(PST[BlackKnight][i])) >> 2, Max(4, -Endgame(PST[BlackKnight][i])) >> 2);
+	}
 	for (i = 0; i < 256; i++) PieceFromChar[i] = 0;
     PieceFromChar[66] = 6;
     PieceFromChar[75] = 14;
@@ -969,12 +1079,12 @@ void init_material() {
 			}
 			if (wp == 0 && w_tot_score - b_tot_score <= 3) {
 			    if (wb < 2 || b_min != bn || bn > 1 || b_maj != 0) {
-				    if (wmul > 1) wmul = 1;
+				    if (wmul > 1) wmul = 2;
 			    }
 		    }
 		    if (bp == 0 && b_tot_score - w_tot_score <= 3) {
 			    if (bb < 2 || w_min != wn || wn > 1 || w_maj != 0) {
-				    if (bmul > 1) bmul = 1;
+				    if (bmul > 1) bmul = 2;
 			    }
 		    }
 			if (w_maj == 0) {
@@ -989,7 +1099,7 @@ void init_material() {
 					    if (wn == 2) {
 						    if (b_min + b_maj == 0 && bp != 0) {
 							    if (wmul > 4) wmul = 4;
-						    } wmul = 0;
+						    } else wmul = 0;
 					    }
 				    }
 			    }
@@ -1011,9 +1121,23 @@ void init_material() {
 				    }
 			    }
 		    }
+			if (b_maj == 0 && b_min == 0 && bp == 0) {
+				if (w_maj >= 1) wmul = 15;
+				else if (wn >= 1 && wb >= 1) wmul = 15;
+				else if (wl >= 1 && wd >= 1) wmul = 15;
+			}
+			if (w_maj == 0 && w_min == 0 && wp == 0) {
+				if (b_maj >= 1) bmul = 15;
+				else if (bn >= 1 && bb >= 1) bmul = 15;
+				else if (bl >= 1 && bd >= 1) bmul = 15;
+			}
+			if (b_tot_score <= 5 && bp == 0 && wq == 1) wmul = 15;
+			if (w_tot_score <= 5 && wp == 0 && bq == 1) bmul = 15;
 			if (True(wl) && True(wd)) score += BishopPair[wp];
 			if (True(bl) && True(bd)) score -= BishopPair[bp];
 		    Material[index] = Convert(score,uint16) | (wmul << 16) | (bmul << 20) | (phase << 24);
+			if (w_maj == 0 && w_min == wb && wb <= 1) Material[index] |= MatLookForDrawW;
+			if (b_maj == 0 && b_min == bb && bb <= 1) Material[index] |= MatLookForDrawB;
 		}
 	}
 }
@@ -1103,6 +1227,58 @@ void init_board(const char fen[]) {
 	init_board();
 }
 
+void init_hash() {
+	if (HashBase != NULL) {
+		if (False(virtual_mem)) free(HashBase);
+		else VirtualFree((DWORD*)HashBase, 0, MEM_RELEASE);
+	}
+#ifndef USE_LARGE_PAGES
+	goto no_lp;
+#endif
+	typedef int (*GETLARGEPAGEMINIMUM)(void);
+	GETLARGEPAGEMINIMUM pGetLargePageMinimum;
+    HINSTANCE hDll = LoadLibrary(TEXT("kernel32.dll"));  
+    if (hDll == NULL) goto no_lp;
+    pGetLargePageMinimum = (GETLARGEPAGEMINIMUM)GetProcAddress(hDll, "GetLargePageMinimum");
+    if (pGetLargePageMinimum == NULL) goto no_lp;
+    int min_page_size = (*pGetLargePageMinimum)();
+	int alloc_size = hash_size * sizeof(GEntry);
+	if (alloc_size < min_page_size || True(alloc_size % min_page_size)) goto no_lp;
+	if (False(init_flag)) {
+	    TOKEN_PRIVILEGES tp;
+	    HANDLE hToken;
+	    OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken);
+	    LookupPrivilegeValue(NULL, "SeLockMemoryPrivilege", &tp.Privileges[0].Luid);
+	    tp.PrivilegeCount = 1;
+        tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+	    AdjustTokenPrivileges(hToken, FALSE, &tp, 0, (PTOKEN_PRIVILEGES)NULL, 0);
+	}
+	HashBase = (GEntry *)VirtualAlloc(NULL, alloc_size, MEM_COMMIT | MEM_LARGE_PAGES, PAGE_READWRITE);
+	if (HashBase == NULL) {
+		if (Console) {
+			fprintf(stdout,"Large page allocation failed... ");
+		    int error = GetLastError();
+		    fprintf(stdout,"Error: %d\n", error);
+		}
+		goto no_lp;
+	}
+	Hash = HashBase;
+	if (Console) fprintf(stdout,"Large page allocation successful! Hash at %p\n", (DWORD*)Hash);
+	init_flag = 1;
+	virtual_mem = 1;
+	return;
+no_lp:
+	virtual_mem = 0;
+	HashBase = (GEntry*)malloc((hash_size * sizeof(GEntry)) + 64);
+	Hash = HashBase;
+	for (int i = 0; i < 3; i++) {
+		if True(((DWORD)((void *)Hash)) & 0x3F) Hash++;
+		else break;
+	}
+	memset(Hash,0,hash_size * sizeof(GEntry));
+	init_flag = 1;
+}
+
 void move_to_string(int move, char string[]) { 
 	int pos = 0;
     string[pos++] = ((move >> 6) & 7) + 'a';
@@ -1147,6 +1323,7 @@ void pick_pv() {
 	depth = -256;
 	for (i = 0, Entry = Hash + (High32(Current->key) & hash_mask); i < 4; i++, Entry++) {
 		if (Entry->key == Low32(Current->key)) {
+			UpdateDate(Entry->date, date);
 			if (True(Entry->move) && Entry->low_depth > depth) {
 				depth = Entry->low_depth;
 				move = Entry->move;
@@ -1155,6 +1332,7 @@ void pick_pv() {
 	}
 	for (i = 0, PVEntry = PVHash + (High32(Current->key) & pv_hash_mask); i < pv_cluster_size; i++, PVEntry++) {
 		if (PVEntry->key == Low32(Current->key)) {
+			PVEntry->date = date;
 			hash_high_pv(PVEntry->value, PVEntry->depth);
 			hash_low_pv(PVEntry->move, PVEntry->value, PVEntry->depth);
 			if (PVEntry->depth >= depth && True(PVEntry->move)) {
@@ -1189,6 +1367,7 @@ inline void do_capture(int move, int to, int capture, GData * Next) {
 	Next->capture = capture;
 	Board->square[from] = 0;
 	Board->square[to] = piece;
+	Next->piece = piece;
 	mask_from = Bit(from);
 	mask_to = Bit(to);
 	Board->bb[piece] ^= mask_from;
@@ -1287,6 +1466,7 @@ void do_move(int move) {
 	piece = Board->square[from];
 	Board->square[from] = 0;
 	Board->square[to] = piece;
+	Next->piece = piece;
 	mask_from = Bit(from);
 	mask_to = Bit(to);
 	me = piece & 1;
@@ -1405,6 +1585,8 @@ void do_move(int move) {
 finish:
 	sp++;
 	Stack[sp] = Next->key;
+	Next->move = move;
+	Next->gen_flags = 0;
 	Current++;
 	nodes++;
 }
@@ -1489,9 +1671,9 @@ inline void do_null() {
 	Next->all_att[White] = Current->all_att[White];
 	Next->all_att[Black] = Current->all_att[Black];
 	// evaluation copy is not precise
-	Next->total_score = -Current->total_score;
-	Next->positional_score = -Current->positional_score;
-	Next->mul = Current->mul;
+	Next->score = -Current->score;
+	Next->move = 0;
+	Next->gen_flags = 0;
 	Next->passer = Current->passer;
 	Next->pawn_att[White] = Current->pawn_att[White];
 	Next->pawn_att[Black] = Current->pawn_att[Black];
@@ -1728,6 +1910,101 @@ int * gen_quiet_moves(int * list) {
 	return list;
 }
 
+int * gen_delta_moves(int * list) {
+	int to, from;
+	uint64 u, v, free, occ;
+
+    occ = Board->bb[White] | Board->bb[Black];
+	free = ~occ;
+	if (Current->turn == White) {
+	    if (True(Current->flags & CanCastle_OO) && False((occ | Current->all_att[Black]) & 0x60) && DeltaMargin(WhiteKing,6)) {
+            *list = 0x106 | FlagCastling | History(WhiteKing,6); list++;
+	    }
+	    if (True(Current->flags & CanCastle_OOO) && (occ & 0x0E) == 0 && False(Current->all_att[Black] & 0x0C) && DeltaMargin(WhiteKing,2)) {
+            *list = 0x102 | FlagCastling | History(WhiteKing,2); list++;
+	    }
+
+	    for (u = ((Board->bb[WhitePawn] & 0x0000FFFFFFFFFF00) << 8) & free; True(u); Cut(u)) {
+            from = lsb(u);
+			if (((from & 0xFFFFFFF8) == 16) && False(Board->square[from + 8]) && DeltaMargin(WhitePawn,from+8)) {
+                *list = ((from - 8) << 6) | (from + 8) | History(WhitePawn,from + 8); list++;
+			}
+			if (DeltaMargin(WhitePawn,from)) {
+			    *list = ((from - 8) << 6) | from | History(WhitePawn,from); list++;
+			}
+		}
+		for (u = Board->bb[WhiteKnight]; True(u); Cut(u)) {
+            from = lsb(u);
+			for (v = free & NAtt[from]; True(v); Cut(v)) {
+                to = lsb(v);
+				if (DeltaMargin(WhiteKnight,to)) {
+					*list = (from << 6) | to | History(WhiteKnight,to); list++;
+				}
+			}
+		}
+		for (u = (Board->bb[WhiteLight] | Board->bb[WhiteDark] | Board->bb[WhiteRook] | Board->bb[WhiteQueen]); True(u); Cut(u)) {
+            from =lsb(u);
+			for (v = free & Current->attacks[from]; True(v); Cut(v)) {
+				to = lsb(v);
+				if (DeltaMargin(Board->square[from],to)) {
+					*list = (from << 6) | to | History(Board->square[from],to); list++;
+				}
+			}
+		}
+		from = lsb(Board->bb[WhiteKing]);
+		for (u = SArea[from] & free & (~Current->all_att[Black]); True(u); Cut(u)) {
+            to = lsb(u);
+			if (DeltaMargin(WhiteKing,to)) {
+				*list = (from << 6) | to | History(WhiteKing,to); list++;
+			}
+		}
+	} else {
+		if (True(Current->flags & CanCastle_oo) && False((occ | Current->all_att[White]) & 0x6000000000000000) && DeltaMargin(BlackKing,62)) {
+            *list = 0xF3E | FlagCastling | History(BlackKing,62); list++;
+	    }
+	    if (True(Current->flags & CanCastle_ooo) && (occ & 0x0E00000000000000) == 0 && False(Current->all_att[White] & 0x0C00000000000000) && DeltaMargin(BlackKing,58)) {
+            *list = 0xF3A | FlagCastling | History(BlackKing,58); list++;
+	    }
+
+	    for (u = ((Board->bb[BlackPawn] >> 8) & 0x0000FFFFFFFFFF00) & free; True(u); Cut(u)) {
+            from = lsb(u);
+			if (((from & 0xFFFFFFF8) == 40) && False(Board->square[from - 8]) && DeltaMargin(BlackPawn,from-8)) {
+                *list = ((from + 8) << 6) | (from - 8) | History(BlackPawn,from - 8); list++;
+			}
+			if (DeltaMargin(BlackPawn,from)) {
+			    *list = ((from + 8) << 6) | from | History(BlackPawn,from); list++;
+			}
+		}
+		for (u = Board->bb[BlackKnight]; True(u); Cut(u)) {
+            from = lsb(u);
+			for (v = free & NAtt[from]; True(v); Cut(v)) {
+                to = lsb(v);
+				if (DeltaMargin(BlackKnight,to)) {
+				    *list = (from << 6) | to | History(BlackKnight,to); list++;
+				}
+			}
+		}
+		for (u = (Board->bb[BlackLight] | Board->bb[BlackDark] | Board->bb[BlackRook] | Board->bb[BlackQueen]); True(u); Cut(u)) {
+            from =lsb(u);
+			for (v = free & Current->attacks[from]; True(v); Cut(v)) {
+				to = lsb(v);
+				if (DeltaMargin(Board->square[from],to)) {
+				    *list = (from << 6) | to | History(Board->square[from],to); list++;
+				}
+			}
+		}
+		from = lsb(Board->bb[BlackKing]);
+		for (u = SArea[from] & free & (~Current->all_att[White]); True(u); Cut(u)) {
+            to = lsb(u);
+			if (DeltaMargin(BlackKing,to)) {
+			    *list = (from << 6) | to | History(BlackKing,to); list++;
+			}
+		}
+	}
+	*list = 0;
+	return list;
+}
+
 int * gen_evasions(int * list) {
 	int king, att_sq, from;
 	uint64 att, esc, u;
@@ -1921,7 +2198,7 @@ int * gen_checks(uint64 capture_target, int * list) { // this function doesn't g
 				}
 			}
 		}
-		clear &= ~Current->pawn_att[Black];
+		if (Current->gen_flags & FlagSkipBadChecks) clear &= ~Current->pawn_att[Black];
 		Current->xray = xray;
 		xray = ~xray;
 		for (u = Board->bb[WhiteKnight] & NArea[king] & xray; True(u); Cut(u)) {
@@ -2011,7 +2288,7 @@ int * gen_checks(uint64 capture_target, int * list) { // this function doesn't g
 				}
 			}
 		}
-		clear &= ~Current->pawn_att[White];
+		if (Current->gen_flags & FlagSkipBadChecks) clear &= ~Current->pawn_att[White];
 		Current->xray = xray;
 		xray = ~xray;
 		for (u = Board->bb[BlackKnight] & NArea[king] & xray; True(u); Cut(u)) {
@@ -2080,12 +2357,20 @@ int * gen_legal_moves() {
 		do_move(move);
 		evaluate();
 		if (False(Current->all_att[Current->turn] & Board->bb[BlackKing ^ Current->turn])) {
+			if (SearchMoves) {
+				for (i = 0; i < SMPointer; i++) {
+					if (SMoves[i] == move) goto keep_move;
+				}
+				goto next_move;
+			}
+keep_move:
 			*p = move;
 			if (move != killer && True(Easy)) {
 				if (-q_search(1 - (value - 150), 16, FlagHashCheck) >= value - 150) Easy = 0;
 			}
 			p++;
 		}
+next_move:
 		undo_move(move);
 	}
 	*p = 0;
@@ -2356,11 +2641,22 @@ start:
 			return move;
 		} else return 0;
 		case 10: // generate captures
-		gen_captures(Current->mask,Current->moves);
-		Current->current = Current->moves;
+		r = gen_captures(Current->mask,Current->moves);
+		for (q = r - 1, p = Current->moves; q > p;) {
+		    move = (*q) & 0xFFFF;
+		    if (False(see(move))) {
+			    next = *p;
+			    *p = *q;
+			    *q = next;
+			    p++;
+		    } else q--;
+	    }
+		// now 0 -> (p - 1): bad captures, p -> (r - 1): good captures
+		Current->start = p; // save p
+		Current->current = p;
 		Current->stage++;
-		case 11: // browse through the captures
-        p = Current->current;
+		case 11: // browse trough the good captures
+		p = Current->current;
 		if (True(*p)) {
 		    for (q = p + 1; (*q) != 0; q++) {
 			    if ((*q) > (*p)) {
@@ -2379,6 +2675,24 @@ start:
 		Current->stage++;
 		case 13: // browse through the checks
         p = Current->current;
+		if (True(*p)) {
+		    for (q = p + 1; (*q) != 0; q++) {
+			    if ((*q) > (*p)) {
+				    next = *p;
+				    *p = *q;
+					*q = next;
+			    }
+		    }
+			Current->current++;
+			move = (*p) & 0xFFFF;
+			return move;
+		} else Current->stage++;
+		case 14: // init bad captures
+		*(Current->start) = 0;
+		Current->current = Current->moves;
+		Current->stage++;
+		case 15: // browse through the bad captures
+		p = Current->current;
 		if (True(*p)) {
 		    for (q = p + 1; (*q) != 0; q++) {
 			    if ((*q) > (*p)) {
@@ -2414,7 +2728,7 @@ void get_attacks() {
 void eval_pawns() {
 	int w_king, b_king, sq, rank, file, wk_score, bk_score, score;
 	uint8 file_w, file_b, rank_w, rank_b;
-	uint64 u, pawns, border_w, straight_w, center_w, area_w, border_b, straight_b, center_b, area_b, mask;
+	uint64 u, v, pawns, border_w, straight_w, center_w, area_w, border_b, straight_b, center_b, area_b, mask;
 
 	w_king = lsb(Board->bb[WhiteKing]);
 	b_king = lsb(Board->bb[BlackKing]);
@@ -2427,6 +2741,8 @@ void eval_pawns() {
 	straight_w = File[file_w];
 	straight_b = File[file_b];
 	pawns = Board->bb[WhitePawn] | Board->bb[BlackPawn];
+	if (rank_w == 0) if (False(SArea[w_king] & Line[1] & (~pawns))) score -= KingBlocked;
+	if (rank_b == 0) if (False(SArea[b_king] & Line[6] & (~pawns))) score += KingBlocked;
 	PawnEntry->passer_w = PawnEntry->passer_b = 0;
 	if (file_w > 0 && file_w < 7) {
 		if (file_w < 4) {
@@ -2465,24 +2781,24 @@ void eval_pawns() {
 		rank = Rank(sq);
 		file = File(sq);
 		file_w |= 1 << file;
-		if (False(PIsolated[sq] & Board->bb[WhitePawn])) score -= PawnIsolated;
+		if (False(PIsolated[sq] & Board->bb[WhitePawn])) score -= PawnIsolated[rank];
 		if (PWay[Black][sq] & Board->bb[WhitePawn]) {
 			score -= PawnDoubled;
 			if (mask & area_b) {
 			    bk_score -= Storm[rank];
 			    if (False(PMove[White][sq] & pawns)) bk_score -= Storm[rank];
 		    }
-		} else {
-			if (mask & area_w) {
-			    if (rank > rank_w) {
-				    if (mask & border_w) wk_score += Shelter[0][rank];
-				    if (mask & straight_w) wk_score += Shelter[1][rank];
-				    if (mask & center_w) wk_score += Shelter[2][rank];
-			    }
-		    } else if (mask & area_b) {
-			    bk_score -= Storm[rank];
-			    if (False(PMove[White][sq] & pawns)) bk_score -= Storm[rank];
-		    }
+		} else if (True(mask & area_w) && rank > rank_w) {
+			if (mask & border_w) wk_score += Shelter[0][rank];
+			if (mask & straight_w) wk_score += Shelter[1][rank];
+			if (mask & center_w) wk_score += Shelter[2][rank];
+		}
+		if (mask & area_b) {
+			bk_score -= Storm[rank];
+		    if (False(PMove[White][sq] & pawns)) {
+				bk_score -= Storm[rank];
+				if (True(PAtt[Black][sq + 8] & Board->bb[WhitePawn]) && True(PAtt[White][sq + 8] & Board->bb[BlackPawn])) bk_score -= Storm[rank];
+			}
 		}
 		if (PWay[White][sq] & Board->bb[WhitePawn]) score -= PawnDoubled;
 		else if (False((PSupport[Black][sq] | PWay[White][sq]) & Board->bb[BlackPawn])) {
@@ -2491,8 +2807,15 @@ void eval_pawns() {
 			if (PAtt[Black][sq] & Board->bb[WhitePawn]) score += ProtectedPasser[rank];
 			PawnEntry->passer_w |= 1 << file;
 		}
-		if (False(PSupport[White][sq] & Board->bb[WhitePawn])) {
-			score -= PawnUP;
+		if (False(PAtt[Black][sq] & Board->bb[WhitePawn])) {
+			score -= PawnUP[rank];
+			if (False(PSupport[White][sq] & Board->bb[WhitePawn])) score -= PawnUR[rank];
+			else {
+			    for (v = PSupport[White][sq] & Board->bb[WhitePawn]; True(v); Cut(v))
+					if (False(PSupport[White][sq] & PWay[White][lsb(v)] & pawns)) goto weak_w;
+				score -= PawnUR[rank];
+			}
+			weak_w:
 			if (True(PMove[White][sq] & pawns) || (True(PAtt[White][sq+8] & Board->bb[BlackPawn]) && False(PAtt[Black][sq+8] & Board->bb[WhitePawn]))) {
 				score -= PawnWeak[rank];
 				if (False(PWay[White][sq] & pawns)) score -= PawnWeakOp[rank];
@@ -2505,24 +2828,24 @@ void eval_pawns() {
 		rank = 7 - Rank(sq);
 		file = File(sq);
 		file_b |= 1 << file;
-		if (False(PIsolated[sq] & Board->bb[BlackPawn])) score += PawnIsolated;
+		if (False(PIsolated[sq] & Board->bb[BlackPawn])) score += PawnIsolated[rank];
 		if (PWay[White][sq] & Board->bb[BlackPawn]) {
 			score += PawnDoubled;
 			if (mask & area_w) {
 			    wk_score -= Storm[rank];
 			    if (False(PMove[Black][sq] & pawns)) wk_score -= Storm[rank];
 		    }
-		} else {
-			if (mask & area_b) {
-			    if (rank > rank_b) {
-				    if (mask & border_b) bk_score += Shelter[0][rank];
-				    if (mask & straight_b) bk_score += Shelter[1][rank];
-				    if (mask & center_b) bk_score += Shelter[2][rank];
-			    }
-		    } else if (mask & area_w) {
-			    wk_score -= Storm[rank];
-			    if (False(PMove[Black][sq] & pawns)) wk_score -= Storm[rank];
-		    }
+		} else if (True(mask & area_b) && rank > rank_b) {
+			if (mask & border_b) bk_score += Shelter[0][rank];
+			if (mask & straight_b) bk_score += Shelter[1][rank];
+		    if (mask & center_b) bk_score += Shelter[2][rank];
+		}
+		if (mask & area_w) {
+			wk_score -= Storm[rank];
+			if (False(PMove[Black][sq] & pawns)) {
+				wk_score -= Storm[rank];
+				if (True(PAtt[White][sq - 8] & Board->bb[BlackPawn]) && True(PAtt[Black][sq - 8] & Board->bb[WhitePawn])) wk_score -= Storm[rank];
+			}
 		}
 		if (PWay[Black][sq] & Board->bb[BlackPawn]) score += PawnDoubled;
 		else if (False((PSupport[White][sq] | PWay[Black][sq]) & Board->bb[WhitePawn])) {
@@ -2531,8 +2854,15 @@ void eval_pawns() {
 			if (PAtt[White][sq] & Board->bb[BlackPawn]) score -= ProtectedPasser[rank];
 			PawnEntry->passer_b |= 1 << file;
 		}
-		if (False(PSupport[Black][sq] & Board->bb[BlackPawn])) {
-			score += PawnUP;
+		if (False(PAtt[White][sq] & Board->bb[BlackPawn])) {
+			score += PawnUP[rank];
+			if (False(PSupport[Black][sq] & Board->bb[BlackPawn])) score += PawnUR[rank];
+			else {
+			    for (v = PSupport[Black][sq] & Board->bb[BlackPawn]; True(v); Cut(v))
+					if (False(PSupport[Black][sq] & PWay[Black][lsb(v)] & pawns)) goto weak_b;
+				score += PawnUR[rank];
+			}
+			weak_b:
 			if (True(PMove[Black][sq] & pawns) || (True(PAtt[Black][sq-8] & Board->bb[WhitePawn]) && False(PAtt[White][sq-8] & Board->bb[BlackPawn]))) {
 				score += PawnWeak[rank];
 				if (False(PWay[Black][sq] & pawns)) score += PawnWeakOp[rank];
@@ -2547,10 +2877,13 @@ void eval_pawns() {
 	PawnEntry->b_shelter = -bk_score;
 }
 
-void evaluate() {
-	int score, sq, d, file, rank, w_king, b_king, wk_att, bk_att;
+template <bool HPopCnt> void evaluation() {
+	int score, sq, file, rank, w_king, b_king, wk_att, bk_att, mul;
 	uint32 material, king_att;
-	uint64 u, pw_att, pb_att, w_att, b_att, att, target, free, way;
+	uint64 u, v, pw_att, pb_att, w_att, b_att, att, target, up_target, threat, free, way;
+#ifdef TUNABLE
+	int space_w, space_b;
+#endif
 
 	if (Current->eval_key == Current->key) return;
 	pw_att = Current->pawn_att[White] = ((Board->bb[WhitePawn] & (0x00FFFFFFFFFFFF00 ^ File[0])) << 7) | ((Board->bb[WhitePawn] & (0x00FFFFFFFFFFFF00 ^ File[7])) << 9);
@@ -2564,101 +2897,231 @@ void evaluate() {
 	if (PawnEntry->key != Low32(Current->pawn_key)) eval_pawns();
 	score = Current->pst + PawnEntry->score;
 
-	target = SArea[b_king];
+	target = DArea[b_king];
+	up_target = (~pb_att) & Board->bb[Black];
+	threat = pw_att & (Board->bb[Black] ^ Board->bb[BlackPawn]);
 	king_att = 0;
 	free = ~(pb_att | Board->bb[White]);
-	if (pw_att & target) king_att += KingPAttack;
+	if (pw_att & SArea[b_king]) king_att += KingAttack;
 	for (u = Board->bb[WhiteKnight]; True(u); u ^= way) {
 		sq = lsb(u);
 		att = NAtt[sq];
 		way = Bit(sq);
 		w_att |= att;
-		if (pw_att & way) score += KnightOutpost;
-		if (att & target) king_att += KingNAttack;
-		score += popcnt(free & att) * KnightMobility;
+		if (att & target) {
+			if (att & SArea[b_king]) king_att += KingNAttack;
+			else king_att += KingAttack;
+		}
+		threat |= att & (Board->bb[BlackRook] | Board->bb[BlackQueen]);
+		if (pb_att & way) continue;
+		if (pw_att & way) {
+			score += KnightOutpost[White][sq];
+			if (Multiple(pw_att & way)) score += KnightOutpost[White][sq];
+		}
+		if (att & up_target) score += PieceUPAttack;
+		score += popcount<HPopCnt>(free & att & Forward[0][Rank(sq)]) * KnightMobility;
 	}
-	for (u = Board->bb[WhiteLight] | Board->bb[WhiteDark]; True(u); Cut(u)) {
-		att = Current->attacks[lsb(u)];
-		w_att |= att;
-		if (att & target) king_att += KingBAttack;
-		score += popcnt((free & att) & BishopMajorWhite) * BishopMobMajor + popcnt((free & att) & BishopMinorWhite) * BishopMobMinor;
-	}
-	for (u = Board->bb[WhiteRook]; True(u); Cut(u)) {
+	for (u = Board->bb[WhiteLight] | Board->bb[WhiteDark]; True(u); u ^= way) {
 		sq = lsb(u);
 		att = Current->attacks[sq];
+		way = Bit(sq);
 		w_att |= att;
 		if (att & target) {
-			king_att += KingRAttack;
-			score += RookKingLook;
+			if (att & SArea[b_king]) king_att += KingBAttack;
+			else king_att += KingAttack;
 		}
-		score += popcnt(free & att) * RookMobility;
+		threat |= att & (Board->bb[BlackRook] | Board->bb[BlackQueen]);
+		if (pb_att & way) continue;
+		if (att & up_target) score += PieceUPAttack;
+		score += popcount<HPopCnt>(free & att & Forward[0][Rank(sq)]) * BishopMobility; // simple "safe forward" mobility appears to be the best:)
+	}
+	for (u = Board->bb[WhiteRook]; True(u); u ^= way) {
+		sq = lsb(u);
+		att = Current->attacks[sq];
+		way = Bit(sq);
+		w_att |= att;
+		if (att & target) {
+			if (att & SArea[b_king]) {
+				king_att += KingRAttack;
+				score += RookKingLook;
+			} else king_att += KingAttack;
+		}
+		threat |= att & (Board->bb[BlackQueen]);
+		if (pb_att & way) continue;
+		if (att & up_target) score += PieceUPAttack;
+		score += popcount<HPopCnt>(free & att) * RookMobility;
 		if (False(Bit(File(sq)) & PawnEntry->white)) {
-			score += RookHOFile;
+			score += RookHOF;
 			if (False(Bit(File(sq)) & PawnEntry->black)) {
-				score += RookOFile;
-				if (File[File(sq)] & Board->bb[BlackKing]) score += RookOFKingAtt;
+				score += RookOF;
+				if (sq < 56) {
+				    rank = msb(PWay[White][sq] & Current->attacks[sq]);
+				    if (rank >= 56) score += RookOFFreeLook;
+					else if (Odd(Board->square[rank]) && Board->square[rank] < WhiteRook) {
+					    if (PAtt[White][rank] & Board->bb[BlackPawn]) score += RookOFMinorPLook;
+					    else score += RookOFMinorUPLook;
+				    }
+				}
+			} else if (sq < 56) {
+				rank = msb(PWay[White][sq] & Current->attacks[sq]);
+				if (Board->square[rank] == BlackPawn) {
+					if (PAtt[White][rank] & Board->bb[BlackPawn]) score += RookHOFPLook;
+					else score += RookHOFUPLook;
+				}
 			}
 		}
 		if (Rank(sq) == 6)
 			if (True(Board->bb[BlackKing] & Line[7]) || True(Board->bb[BlackPawn] & Line[6])) score += RookSeventhRank;
 	}
-	for (u = Board->bb[WhiteQueen]; True(u); Cut(u)) {
+	for (u = Board->bb[WhiteQueen]; True(u); u ^= way) {
 		att = Current->attacks[lsb(u)];
+		way = Bit(lsb(u));
 		w_att |= att;
-		if (att & target) king_att += KingQAttack;
-		score += popcnt(free & att) * QueenMobility;
+		if (att & target) {
+			if (att & SArea[b_king]) {
+				king_att += KingQAttack;
+				for (v = att & BMask[lsb(u)] & (Board->bb[WhiteLight] | Board->bb[WhiteDark]); True(v); Cut(v)) {
+					if (True(FullLine[lsb(u)][lsb(v)] & SArea[b_king]) && False(Current->attacks[lsb(v)] & target)) {
+						king_att += KingAttack;
+						break;
+					}
+				}
+				for (v = att & RMask[lsb(u)] & Board->bb[WhiteRook]; True(v); Cut(v)) {
+					if (True(FullLine[lsb(u)][lsb(v)] & SArea[b_king]) && False(Current->attacks[lsb(v)] & target)) {
+						king_att += KingAttack;
+						break;
+					}
+				}
+			} else king_att += KingAttack;
+		}
+		if (pb_att & way) continue;
+		if (att & up_target) score += PieceUPAttack;
+		score += popcount<HPopCnt>(free & att) * QueenMobility;
 	}
 	wk_att = king_att & 0xFFFF;
+#ifndef TUNABLE
 	if (Board->bb[WhiteQueen]) score += (PawnEntry->b_shelter * ((king_att >> 16) + 80))/120;
+#else
+	if (Board->bb[WhiteQueen]) score += (PawnEntry->b_shelter * ((king_att >> 16) + 80))/(120 - (20 * Favor));
+#endif
 	score += ((king_att >> 16) * (KingAttackScale[wk_att])) >> 4;
+	if (threat) {
+		sq = popcount<HPopCnt>(threat);
+		score += ThreatScale[sq];
+	}
 
-	target = SArea[w_king];
+	target = DArea[w_king];
+	up_target = (~pw_att) & Board->bb[White];
+	threat = pb_att & (Board->bb[White] ^ Board->bb[WhitePawn]);
 	king_att = 0;
 	free = ~(pw_att | Board->bb[Black]);
-	if (pb_att & target) king_att += KingPAttack;
+	if (pb_att & SArea[w_king]) king_att += KingAttack;
 	for (u = Board->bb[BlackKnight]; True(u); u ^= way) {
 		sq = lsb(u);
 		att = NAtt[sq];
 		way = Bit(sq);
 		b_att |= att;
-		if (pb_att & way) score -= KnightOutpost;
-		if (att & target) king_att += KingNAttack;
-		score -= popcnt(free & att) * KnightMobility;
+		if (att & target) {
+			if (att & SArea[w_king]) king_att += KingNAttack;
+			else king_att += KingAttack;
+		}
+		threat |= att & (Board->bb[WhiteRook] | Board->bb[WhiteQueen]);
+		if (pw_att & way) continue;
+		if (pb_att & way) {
+			score -= KnightOutpost[Black][sq];
+			if (Multiple(pb_att & way)) score -= KnightOutpost[Black][sq];
+		}
+		if (att & up_target) score -= PieceUPAttack;
+		score -= popcount<HPopCnt>(free & att & Forward[1][Rank(sq)]) * KnightMobility;
 	}
-	for (u = Board->bb[BlackLight] | Board->bb[BlackDark]; True(u); Cut(u)) {
-		att = Current->attacks[lsb(u)];
-		b_att |= att;
-		if (att & target) king_att += KingBAttack;
-		score -= popcnt((free & att) & BishopMajorBlack) * BishopMobMajor + popcnt((free & att) & BishopMinorBlack) * BishopMobMinor;
-	}
-	for (u = Board->bb[BlackRook]; True(u); Cut(u)) {
+	for (u = Board->bb[BlackLight] | Board->bb[BlackDark]; True(u); u ^= way) {
 		sq = lsb(u);
 		att = Current->attacks[sq];
+		way = Bit(sq);
 		b_att |= att;
 		if (att & target) {
-			king_att += KingRAttack;
-			score -= RookKingLook;
+			if (att & SArea[w_king]) king_att += KingBAttack;
+			else king_att += KingAttack;
 		}
-		score -= popcnt(free & att) * RookMobility;
+		threat |= att & (Board->bb[WhiteRook] | Board->bb[WhiteQueen]);
+		if (pw_att & way) continue;
+		if (att & up_target) score -= PieceUPAttack;
+		score -= popcount<HPopCnt>(free & att & Forward[1][Rank(sq)]) * BishopMobility;
+	}
+	for (u = Board->bb[BlackRook]; True(u); u ^= way) {
+		sq = lsb(u);
+		att = Current->attacks[sq];
+		way = Bit(sq);
+		b_att |= att;
+		if (att & target) {
+			if (att & SArea[w_king]) {
+				king_att += KingRAttack;
+				score -= RookKingLook;
+			} else king_att += KingAttack;
+		}
+		threat |= att & (Board->bb[WhiteQueen]);
+		if (pw_att & way) continue;
+		if (att & up_target) score -= PieceUPAttack;
+		score -= popcount<HPopCnt>(free & att) * RookMobility;
 		if (False(Bit(File(sq)) & PawnEntry->black)) {
-			score -= RookHOFile;
+			score -= RookHOF;
 			if (False(Bit(File(sq)) & PawnEntry->white)) {
-				score -= RookOFile;
-				if (File[File(sq)] & Board->bb[WhiteKing]) score -= RookOFKingAtt;
+				score -= RookOF;
+				if (sq >= 8) {
+				    rank = lsb(PWay[Black][sq] & Current->attacks[sq]);
+				    if (rank < 8) score -= RookOFFreeLook;
+				    else if (Even(Board->square[rank]) && Board->square[rank] < WhiteRook) {
+					    if (PAtt[Black][rank] & Board->bb[WhitePawn]) score -= RookOFMinorPLook;
+					    else score -= RookOFMinorUPLook;
+				    }
+				}
+			} else if (sq >= 8) {
+				rank = lsb(PWay[Black][sq] & Current->attacks[sq]);
+				if (Board->square[rank] == WhitePawn) {
+					if (PAtt[Black][rank] & Board->bb[WhitePawn]) score -= RookHOFPLook;
+					else score -= RookHOFUPLook;
+				}
 			}
 		}
 		if (Rank(sq) == 1)
 			if (True(Board->bb[WhiteKing] & Line[0]) || True(Board->bb[WhitePawn] & Line[1])) score -= RookSeventhRank;
 	}
-	for (u = Board->bb[BlackQueen]; True(u); Cut(u)) {
+	for (u = Board->bb[BlackQueen]; True(u); u ^= way) {
 		att = Current->attacks[lsb(u)];
+		way = Bit(lsb(u));
 		b_att |= att;
-		if (att & target) king_att += KingQAttack;
-		score -= popcnt(free & att) * QueenMobility;
+		if (att & target) {
+			if (att & SArea[w_king]) {
+				king_att += KingQAttack;
+				for (v = att & BMask[lsb(u)] & (Board->bb[BlackLight] | Board->bb[BlackDark]); True(v); Cut(v)) {
+					if (True(FullLine[lsb(u)][lsb(v)] & SArea[w_king]) && False(Current->attacks[lsb(v)] & target)) {
+						king_att += KingAttack;
+						break;
+					}
+				}
+				for (v = att & RMask[lsb(u)] & Board->bb[BlackRook]; True(v); Cut(v)) {
+					if (True(FullLine[lsb(u)][lsb(v)] & SArea[w_king]) && False(Current->attacks[lsb(v)] & target)) {
+						king_att += KingAttack;
+						break;
+					}
+				}
+			} else king_att += KingAttack;
+		}
+		if (pw_att & way) continue;
+		if (att & up_target) score -= PieceUPAttack;
+		score -= popcount<HPopCnt>(free & att) * QueenMobility;
 	}
 	bk_att = king_att & 0xFFFF;
+#ifndef TUNABLE
 	if (Board->bb[BlackQueen]) score -= Convert((PawnEntry->w_shelter * ((king_att >> 16) + 80))/120,int);
+#else
+	if (Board->bb[BlackQueen]) score -= Convert((PawnEntry->w_shelter * ((king_att >> 16) + 80))/(120 + (20 * Favor)),int);
+#endif
 	score -= Convert(((king_att >> 16) * (KingAttackScale[bk_att])) >> 4,int);
+	if (threat) {
+		sq = popcount<HPopCnt>(threat);
+		score -= ThreatScale[sq];
+	}
 
 	Current->passer = 0;
 	for (u = PawnEntry->passer_w; True(u); Cut(u)) {
@@ -2667,21 +3130,39 @@ void evaluate() {
 		rank = Rank(sq);
 		Current->passer |= Bit(sq);
 		way = PWay[White][sq];
+		int connected = 0, supported = 0, hooked = 0, square;
+		if (PWay[Black][sq] & (Board->bb[WhiteRook] | Board->bb[WhiteQueen])) {
+			square = msb(PWay[Black][sq] & (Board->bb[WhiteRook] | Board->bb[WhiteQueen]));
+			if (Current->attacks[square] & Bit(sq)) supported = 1;
+		}
+		if (PWay[Black][sq] & (Board->bb[BlackRook] | Board->bb[BlackQueen])) {
+			square = msb(PWay[Black][sq] & (Board->bb[BlackRook] | Board->bb[BlackQueen]));
+			if (Current->attacks[square] & Bit(sq)) hooked = 1;
+		}
+		for (v = SArea[sq] & (~File[file]) & Board->bb[WhitePawn]; True(v); Cut(v)) {
+			square = lsb(v);
+			if (False(Board->bb[BlackPawn] & (PWay[White][square] | PSupport[Black][square]))) connected++;
+		}
+		if (False(way & Board->bb[White])) score += NoSelfPasserBlock[rank];
+		if (way & Board->bb[WhiteRook]) score -= RookPasserBlock[rank];
+	    if (False(way & Board->bb[Black])) score += NoOppPasserBlock[rank];
+	    if (False(Board->square[sq + 8])) {
+			score += PasserPush[rank];
+			if (False(hooked) && (connected >= 2 || False(way & (b_att | Board->bb[White] | Board->bb[Black])))) {
+				score += RagingPasser[rank];
+				score += FreePasser[rank];
+			} else if (True(connected) || ((True(supported) || False(way & b_att & (~w_att))) & False(hooked))) score += FreePasser[rank];
+		}
+		if (file == 0 || file == 7) {
+			if (Board->bb[Black] == (Board->bb[BlackKing] | Board->bb[BlackKnight] | Board->bb[BlackPawn]))
+                score += DistantPasser[rank];
+	    }
 		if (Board->bb[Black] == (Board->bb[BlackPawn] | Board->bb[BlackKing])) {
-			if (Rank(w_king) >= 6 && True((PIsolated[sq] | way) & Board->bb[WhiteKing])) d = file + ((Rank(w_king) - 1) << 3);
-			else d = file + 56;
-			sq = Dist(b_king,d);
-			if (way & Board->bb[WhiteKing]) sq--;
-			if (sq - Current->turn > Rank(d) - rank) score += UnstoppablePasser;
-		} else {
-			if (False(way & Board->bb[White])) score += NoSelfPasserBlock[rank];
-		    if (way & Board->bb[WhiteRook]) score -= RookPasserBlock[rank];
-		    if (False(way & Board->bb[Black])) score += NoOppPasserBlock[rank];
-		    if (False(way & b_att & (~w_att))) score += FreePasser[rank];
-			if (file == 0 || file == 7) {
-			    if (Board->bb[Black] == (Board->bb[BlackKing] | Board->bb[BlackKnight] | Board->bb[BlackPawn]))
-                    score += DistantPasser[rank];
-			}
+			if (Rank(w_king) >= 6 && True((PIsolated[sq] | way) & Board->bb[WhiteKing])) square = file + ((Rank(w_king) - 1) << 3);
+			else square = file + 56;
+			hooked = Dist(b_king,square);
+			if (way & Board->bb[WhiteKing]) hooked--;
+			if (hooked - Current->turn > Rank(square) - rank) score += Passer[rank] + Passer[rank];
 		}
 	}
 	for (u = PawnEntry->passer_b; True(u); Cut(u)) {
@@ -2690,58 +3171,127 @@ void evaluate() {
 		rank = 7 - Rank(sq);
 		Current->passer |= Bit(sq);
 		way = PWay[Black][sq];
+		int connected = 0, supported = 0, hooked = 0, square;
+		if (PWay[White][sq] & (Board->bb[BlackRook] | Board->bb[BlackQueen])) {
+			square = lsb(PWay[White][sq] & (Board->bb[BlackRook] | Board->bb[BlackQueen]));
+			if (Current->attacks[square] & Bit(sq)) supported = 1;
+		}
+		if (PWay[White][sq] & (Board->bb[WhiteRook] | Board->bb[WhiteQueen])) {
+			square = lsb(PWay[White][sq] & (Board->bb[WhiteRook] | Board->bb[WhiteQueen]));
+			if (Current->attacks[square] & Bit(sq)) hooked = 1;
+		}
+		for (v = SArea[sq] & (~File[file]) & Board->bb[BlackPawn]; True(v); Cut(v)) {
+			square = lsb(v);
+			if (False(Board->bb[WhitePawn] & (PWay[Black][square] | PSupport[White][square]))) connected++;
+		}
+		if (False(way & Board->bb[Black])) score -= NoSelfPasserBlock[rank];
+		if (way & Board->bb[BlackRook]) score += RookPasserBlock[rank];
+		if (False(way & Board->bb[White])) score -= NoOppPasserBlock[rank];
+	    if (False(Board->square[sq - 8])) {
+			score -= PasserPush[rank];
+		    if (False(hooked) && (connected >= 2 || False(way & (w_att | Board->bb[White] | Board->bb[Black])))) {
+				score -= RagingPasser[rank];
+				score -= FreePasser[rank];
+		    } else if (True(connected) || ((True(supported) || False(way & w_att & (~b_att))) & False(hooked))) score -= FreePasser[rank];
+		}
+	    if (file == 0 || file == 7) {
+			if (Board->bb[White] == (Board->bb[WhiteKing] | Board->bb[WhiteKnight] | Board->bb[WhitePawn]))
+                score -= DistantPasser[rank];
+        }
 		if (Board->bb[White] == (Board->bb[WhitePawn] | Board->bb[WhiteKing])) {
-			if (Rank(b_king) <= 1 && True((PIsolated[sq] | way) & Board->bb[BlackKing])) d = file + ((Rank(b_king) + 1) << 3);
-			else d = file;
-			sq = Dist(w_king,d);
-			if (way & Board->bb[BlackKing]) sq--;
-			if (sq + Current->turn > 8 - Rank(d) - rank) score -= UnstoppablePasser;
-		} else {
-			if (False(way & Board->bb[Black])) score -= NoSelfPasserBlock[rank];
-		    if (way & Board->bb[BlackRook]) score += RookPasserBlock[rank];
-		    if (False(way & Board->bb[White])) score -= NoOppPasserBlock[rank];
-		    if (False(way & w_att & (~b_att))) score -= FreePasser[rank];
-			if (file == 0 || file == 7) {
-			    if (Board->bb[White] == (Board->bb[WhiteKing] | Board->bb[WhiteKnight] | Board->bb[WhitePawn]))
-                    score -= DistantPasser[rank];
-			}
+			if (Rank(b_king) <= 1 && True((PIsolated[sq] | way) & Board->bb[BlackKing])) square = file + ((Rank(b_king) + 1) << 3);
+			else square = file;
+			hooked = Dist(w_king,square);
+			if (way & Board->bb[BlackKing]) hooked--;
+			if (hooked + Current->turn > 8 - Rank(square) - rank) score -= Passer[rank] + Passer[rank];
 		}
 	}
 
+#ifdef TUNABLE
+	if (Space) {
+	    space_w = SpaceScore[popcount<HPopCnt>((Board->bb[White] ^ (Board->bb[WhiteKing] | Board->bb[WhitePawn])) & BlackArea)];
+        space_b = SpaceScore[popcount<HPopCnt>((Board->bb[Black] ^ (Board->bb[BlackKing] | Board->bb[BlackPawn])) & WhiteArea)];
+		if (Favor == 0) {
+			score += space_w - space_b;
+		} else if (Favor > 0) score += space_w;
+		else score -= space_b;
+	}
+	if (Favor > 0) score += 5;
+	else if (Favor < 0) score -= 5;
+#endif
+
 	Current->all_att[White] = w_att;
 	Current->all_att[Black] = b_att;
+	score += popcount<HPopCnt>(pw_att & (Board->bb[White] ^ Board->bb[WhitePawn] ^ Board->bb[WhiteKing])) * PieceOutpost;
+	score -= popcount<HPopCnt>(pb_att & (Board->bb[Black] ^ Board->bb[BlackPawn] ^ Board->bb[BlackKing])) * PieceOutpost;
+	score -= popcount<HPopCnt>((~w_att) & (Board->bb[White] ^ Board->bb[WhitePawn] ^ Board->bb[WhiteKing])) * PieceHanging;
+	score += popcount<HPopCnt>((~b_att) & (Board->bb[Black] ^ Board->bb[BlackPawn] ^ Board->bb[BlackKing])) * PieceHanging;
 	if (Current->material & FlagUnusualMaterial) {
 		int dp, wmin, bmin, wr, br, wq, bq, phase;
-		dp = popcnt(Board->bb[WhitePawn]) - popcnt(Board->bb[BlackPawn]);
-		wmin = popcnt(Board->bb[WhiteKnight] | Board->bb[WhiteLight] | Board->bb[WhiteDark]);
-		bmin = popcnt(Board->bb[BlackKnight] | Board->bb[BlackLight] | Board->bb[BlackDark]);
-		wr = popcnt(Board->bb[WhiteRook]);
-		br = popcnt(Board->bb[BlackRook]);
-		wq = popcnt(Board->bb[WhiteQueen]);
-		bq = popcnt(Board->bb[BlackQueen]);
+		dp = popcount<HPopCnt>(Board->bb[WhitePawn]) - popcount<HPopCnt>(Board->bb[BlackPawn]);
+		wmin = popcount<HPopCnt>(Board->bb[WhiteKnight] | Board->bb[WhiteLight] | Board->bb[WhiteDark]);
+		bmin = popcount<HPopCnt>(Board->bb[BlackKnight] | Board->bb[BlackLight] | Board->bb[BlackDark]);
+		wr = popcount<HPopCnt>(Board->bb[WhiteRook]);
+		br = popcount<HPopCnt>(Board->bb[BlackRook]);
+		wq = popcount<HPopCnt>(Board->bb[WhiteQueen]);
+		bq = popcount<HPopCnt>(Board->bb[BlackQueen]);
 		phase = (wmin + bmin) + (wr + br) * 2 + (wq + bq) * 4;
-		Current->total_score = Current->positional_score = (Convert(score & 0xFFFF,sint16) * phase + Convert(score >> 16,sint16) * Max(24 - phase,0))/24;
-		Current->mul = 15;
-		Current->total_score += dp * PawnValueOp + (wmin - bmin) * KnightValue + (wr - br) * RookValue + (wq - bq) * QueenValue;
-		if (Current->turn) {
-			Current->total_score = -Current->total_score;
-			Current->positional_score = -Current->positional_score;
-		}
+		Current->score = (Convert(score & 0xFFFF,sint16) * phase + Convert(score >> 16,sint16) * Max(24 - phase,0))/24;
+		Current->score += dp * PawnValueOp + (wmin - bmin) * KnightValue + (wr - br) * RookValue + (wq - bq) * QueenValue;
+		if (Current->turn) Current->score = -Current->score;
 		Current->eval_key = Current->key;
 		return;
 	}
 	material = Material[Current->material];
-	Current->positional_score = (Opening(score) * Convert((material >> 24) & 0x1F,int) + Endgame(score) * Max(24 - Convert((material >> 24) & 0x1F,int), 0))/24;
-	Current->total_score = Convert(material & 0xFFFF,sint16);
-	Current->total_score += Current->positional_score;
-	if (Current->total_score > 0) Current->mul = AdvantageScale[bk_att] * ((material >> 16) & 0xF);
-	else Current->mul = AdvantageScale[wk_att] * ((material >> 20) & 0xF);
-	Current->total_score = (Current->total_score * Current->mul) / 240;
-	if (Current->turn) {
-		Current->total_score = -Current->total_score;
-		Current->positional_score = -Current->positional_score;
+	Current->score = Convert(material & 0xFFFF,sint16) + (Opening(score) * Convert((material >> 24) & 0x1F,int) + Endgame(score) * Max(24 - Convert((material >> 24) & 0x1F,int), 0))/24;
+	if (Current->score > 0) {
+#ifndef TUNABLE
+		if (Board->bb[BlackQueen]) 
+#else
+		if (True(Board->bb[BlackQueen]) && Favor <= 0)
+#endif
+			mul = AdvantageScale[bk_att] * ((material >> 16) & 0xF);
+		else mul = ((material >> 16) & 0xF) << 4;
+		if (material & MatLookForDrawW) {
+			if (False(Board->bb[WhitePawn] & (~(File[0] | File[7]))) && False(Board->bb[WhiteKnight] | Board->bb[WhiteRook] | Board->bb[WhiteQueen])) {
+				// 1) wrong bishop
+			    if (False(Board->bb[WhitePawn] & File[7]) && False(Board->bb[WhiteLight]) && True(Board->bb[BlackKing] & 0x0303000000000000)) mul = Min(mul, 1 << 4);
+			    if (False(Board->bb[WhitePawn] & File[0]) && False(Board->bb[WhiteDark]) && True(Board->bb[BlackKing] & 0xC0C0000000000000)) mul = Min(mul, 1 << 4);
+				// 2) bishop & blocked pawn
+				if (True(Board->bb[WhitePawn] & Line[5] & (Board->bb[BlackPawn] >> 8))) {
+			        if (False(Board->bb[WhitePawn] & File[7]) && True(Board->bb[BlackKing] & 0x0707000000000000)) mul = Min(mul, 1 << 4);
+			        if (False(Board->bb[WhitePawn] & File[0]) && True(Board->bb[BlackKing] & 0xE0E0000000000000)) mul = Min(mul, 1 << 4);
+			    }
+			}
+		}
+	} else {
+#ifndef TUNABLE
+		if (Board->bb[WhiteQueen])
+#else
+		if (True(Board->bb[WhiteQueen]) && Favor >= 0)
+#endif
+			mul = AdvantageScale[wk_att] * ((material >> 20) & 0xF);
+		else mul = ((material >> 20) & 0xF) << 4;
+		if (material & MatLookForDrawB) {
+	        if (False(Board->bb[BlackPawn] & (~(File[0] | File[7]))) && False(Board->bb[BlackKnight] | Board->bb[BlackRook] | Board->bb[BlackQueen])) {
+				// 1) wrong bishop
+			    if (False(Board->bb[BlackPawn] & File[7]) && False(Board->bb[BlackDark]) && True(Board->bb[WhiteKing] & 0x0000000000000303)) mul = Min(mul, 1 << 4);
+			    if (False(Board->bb[BlackPawn] & File[0]) && False(Board->bb[BlackLight]) && True(Board->bb[WhiteKing] & 0x000000000000C0C0)) mul = Min(mul, 1 << 4);
+				// 2) bishop & blocked pawn
+				if (True(Board->bb[BlackPawn] & Line[2] & (Board->bb[WhitePawn] << 8))) {
+			        if (False(Board->bb[BlackPawn] & File[7]) && True(Board->bb[WhiteKing] & 0x0000000000000707)) mul = Min(mul, 1 << 4);
+			        if (False(Board->bb[BlackPawn] & File[0]) && True(Board->bb[WhiteKing] & 0x000000000000E0E0)) mul = Min(mul, 1 << 4);
+			    }
+		    }
+		}
 	}
+	Current->score = (Current->score * mul) / 240;
+	if (Current->turn) Current->score = -Current->score;
 	Current->eval_key = Current->key;
+}
+
+inline void evaluate() {
+	HardwarePopCnt ? evaluation<1>() : evaluation<0>();
 }
 
 int is_legal(int move) {
@@ -2854,7 +3404,7 @@ void hash_high(int value, int depth) {
 	best_score = 0xFFFFFFFFFFFFFFFF;
 	for (i = 0, best = Entry = Hash + (High32(Current->key) & hash_mask); i < 4; i++, Entry++) {
 		if (Entry->key == Low32(Current->key)) {
-			Entry->date = date;
+			UpdateDate(Entry->date, date);
 			if (Entry->low_depth <= depth && Entry->low > value) Entry->low = value;
 			if (Entry->high_depth < depth) {
 				if (Entry->high >= value || False(Entry->high_depth)) {
@@ -2889,6 +3439,7 @@ void hash_high(int value, int depth) {
 sweep:
 	for (i = i + 1, Entry = Entry + 1; i < 4; i++, Entry++) {
 		if (Entry->key == Low32(Current->key)) {
+			UpdateDate(Entry->date, date);
 		    if (Entry->low_depth <= depth && Entry->low > value) Entry->low = value;
 		    if (Entry->high_depth <= depth && Entry->high >= value) {
 				Entry->high_depth = 0;
@@ -2908,7 +3459,7 @@ void hash_low(int move, int value, int depth) {
 	move &= 0xFFFF;
 	for (i = 0, best = Entry = Hash + (High32(Current->key) & hash_mask); i < 4; i++, Entry++) {
 		if (Entry->key == Low32(Current->key)) {
-			Entry->date = date;
+			UpdateDate(Entry->date, date);
 			if (Entry->high_depth <= depth && Entry->high < value) Entry->high = value;
 			if (Entry->low_depth < depth) {
 				if (Entry->low <= value) {
@@ -2948,6 +3499,7 @@ void hash_low(int move, int value, int depth) {
 sweep:
 	for (i = i + 1, Entry = Entry + 1; i < 4; i++, Entry++) {
 		if (Entry->key == Low32(Current->key)) {
+			UpdateDate(Entry->date, date);
 		    if (Entry->high_depth <= depth && Entry->high < value) Entry->high = value;
 		    if (Entry->low_depth <= depth && Entry->low <= value) {
 				Entry->low = value;
@@ -2966,7 +3518,7 @@ void hash_high_pv(int value, int depth) {
 	best_score = 0xFFFFFFFFFFFFFFFF;
 	for (i = 0, best = Entry = Hash + (High32(Current->key) & hash_mask); i < 4; i++, Entry++) {
 		if (Entry->key == Low32(Current->key)) {
-			Entry->date = date;
+			UpdateDate(Entry->date, date);
 			if (Entry->low_depth <= depth && Entry->low > value) Entry->low = value;
 			if (Entry->high_depth < depth) {
 				if (Entry->high >= value || False(Entry->high_depth)) {
@@ -3001,6 +3553,7 @@ void hash_high_pv(int value, int depth) {
 sweep:
 	for (i = i + 1, Entry = Entry + 1; i < 4; i++, Entry++) {
 		if (Entry->key == Low32(Current->key)) {
+			UpdateDate(Entry->date, date);
 		    if (Entry->low_depth <= depth && Entry->low > value) Entry->low = value;
 		    if (Entry->high_depth <= depth && Entry->high >= value) {
 				Entry->high_depth = 0;
@@ -3020,7 +3573,7 @@ void hash_low_pv(int move, int value, int depth) {
 	move &= 0xFFFF;
 	for (i = 0, best = Entry = Hash + (High32(Current->key) & hash_mask); i < 4; i++, Entry++) {
 		if (Entry->key == Low32(Current->key)) {
-			Entry->date = date;
+			UpdateDate(Entry->date, date);
 			if (Entry->high_depth <= depth && Entry->high < value) Entry->high = value;
 			if (Entry->low_depth < depth) {
 				if (Entry->low <= value) {
@@ -3060,6 +3613,7 @@ void hash_low_pv(int move, int value, int depth) {
 sweep:
 	for (i = i + 1, Entry = Entry + 1; i < 4; i++, Entry++) {
 		if (Entry->key == Low32(Current->key)) {
+			UpdateDate(Entry->date, date);
 		    if (Entry->high_depth <= depth && Entry->high < value) Entry->high = value;
 		    if (Entry->low_depth <= depth && Entry->low <= value) {
 				Entry->low_depth = 0;
@@ -3069,6 +3623,108 @@ sweep:
 	}
 	return;
 }
+
+#ifdef TUNABLE
+void hash_high_forced(int value) {
+	int i;
+	uint64 score, best_score;
+	GEntry *best;
+
+	best_score = 0xFFFFFFFFFFFFFFFF;
+	for (i = 0, best = Entry = Hash + (High32(Current->key) & hash_mask); i < 4; i++, Entry++) {
+		if (Entry->key == Low32(Current->key)) {
+			Entry->date = date + 1;
+			if (Entry->low > value) Entry->low = value;
+			if (Entry->high >= value) {
+				Entry->high_depth = 127;
+				Entry->high = value;
+				Entry->date = 0x10000000;
+				goto sweep;
+			}
+			score = (Convert(Entry->date,uint64) << 32) | Convert(Entry->high_depth,uint64);
+		} else score = (Convert(Entry->date,uint64) << 32) | Convert(Max(Entry->high_depth, Entry->low_depth),uint64);
+		if (score < best_score) {
+			best_score = score;
+			best = Entry;
+		}
+	}
+	best->date = 0x10000000;
+	if (best->key == Low32(Current->key)) {
+		best->high = value;
+		best->high_depth = 127;
+	} else {
+		best->key = Low32(Current->key);
+		best->high = value;
+		best->high_depth = 127;
+		best->low = 0;
+		best->low_depth = 0;
+		best->move = 0;
+	}
+	return;
+sweep:
+	for (i = i + 1, Entry = Entry + 1; i < 4; i++, Entry++) {
+		if (Entry->key == Low32(Current->key)) {
+			Entry->date = date + 1;
+		    if (Entry->low > value) Entry->low = value;
+		    if (Entry->high >= value) {
+				Entry->high_depth = 0;
+				Entry->date = 0;
+			}
+		}
+	}
+	return;
+}
+
+void hash_low_forced(int value) {
+	int i;
+	uint64 score, best_score;
+	GEntry *best;
+
+	best_score = 0xFFFFFFFFFFFFFFFF;
+	for (i = 0, best = Entry = Hash + (High32(Current->key) & hash_mask); i < 4; i++, Entry++) {
+		if (Entry->key == Low32(Current->key)) {
+			Entry->date = date + 1;
+			if (Entry->high < value) Entry->high = value;
+			if (Entry->low <= value) {
+				Entry->low_depth = 127;
+				Entry->low = value;
+				Entry->date = 0x10000000;
+				goto sweep;
+			}
+		    score = (Convert(Entry->date,uint64) << 32) | Convert(Entry->low_depth,uint64);
+		} else score = (Convert(Entry->date,uint64) << 32) | Convert(Max(Entry->high_depth, Entry->low_depth),uint64);
+		if (score < best_score) {
+			best_score = score;
+			best = Entry;
+		}
+	}
+	best->date = 0x10000000;
+	if (best->key == Low32(Current->key)) {
+		best->low = value;
+		best->low_depth = 127;
+	} else {
+		best->key = Low32(Current->key);
+		best->high = 0;
+		best->high_depth = 0;
+		best->low = value;
+		best->low_depth = 127;
+		best->move = 0;
+	}
+	return;
+sweep:
+	for (i = i + 1, Entry = Entry + 1; i < 4; i++, Entry++) {
+		if (Entry->key == Low32(Current->key)) {
+			Entry->date = date + 1;
+		    if (Entry->high < value) Entry->high = value;
+		    if (Entry->low <= value) {
+				Entry->low_depth = 0;
+				Entry->date = 0;
+			}
+		}
+	}
+	return;
+}
+#endif
 
 void hash_exact(int move, int value, int depth) {
 	int i;
@@ -3106,7 +3762,7 @@ inline int extension(int move, int pv) {
 	if (False(pv)) {
 		if (Current->passer & (Bit(to) | Bit(from))) if (ext < 1) ext = 1;
 	} else {
-		if (Board->square[to] >= MinCapture[Board->square[from]]) ext = 1;
+		if (Board->square[to] >= WhiteKnight || True(move & 0xE000)) if (see(move)) ext = 1;
 	    if (Current->passer & (Bit(to) | Bit(from))) {
 			if (Current->passer & Board->bb[Current->turn] & Bit(from)) {
 			    if (Current->turn) {
@@ -3188,7 +3844,7 @@ inline int is_defence(int move, uint64 target) {
 }
 
 int q_search(int beta, int depth, int flags) {
-	int i, move, me, hash_move, hash_depth = -256, value, *p, *q, new_depth;
+	int i, move, me, hash_move, hash_depth = -256, value, *p, *q, new_depth, cpt, flag, curr_value;
 	uint64 target;
 
 	if (flags & FlagHaltCheck) {
@@ -3201,8 +3857,8 @@ int q_search(int beta, int depth, int flags) {
 	    hash_depth = 0;
 	    for (i = 0, Entry = Hash + (High32(Current->key) & hash_mask); i < 4; i++, Entry++) {
 		    if (Low32(Current->key) == Entry->key) {
-			    if (Entry->high_depth >= depth && Entry->high < beta) return beta - 1;
-			    if (Entry->low_depth >= depth && Entry->low >= beta) return beta;
+			    if (Entry->high_depth >= depth && Entry->high < beta) return Entry->high;
+			    if (Entry->low_depth >= depth && Entry->low >= beta) return Entry->low;
 			    if (Entry->move && Entry->low_depth > hash_depth) {
 				    Current->killer[0] = hash_move = Entry->move;
 				    hash_depth = Entry->low_depth;
@@ -3213,28 +3869,63 @@ int q_search(int beta, int depth, int flags) {
 	if (flags & FlagCallEvaluation) evaluate();
 	me = Current->turn;
 	if (Board->bb[BlackKing ^ me] & Current->all_att[me]) return MateValue + 1;
-	if (Board->bb[WhiteKing | me] & Current->all_att[me ^ 1]) return q_evasion(beta,depth,hash_move);
-	if (Current->total_score >= beta - 5) return beta;
-	if (False(Board->square[To(hash_move)])) hash_move = 0;
-	new_depth = depth - 4;
+	if (Board->bb[WhiteKing | me] & Current->all_att[me ^ 1]) return q_evasion(beta,depth,hash_move | (Current->score < beta - 5 ? FlagOnlyCaptures : 0));
+	if (Current->score >= beta - 5) {
+		hash_low(0, Current->score + 5, 16);
+		return Current->score + 5;
+	}
+	curr_value = Current->score + 5;
+	UpdateDeltaM;
+	new_depth = depth - 1;
 	if (new_depth < 1) new_depth = 1;
+	cpt = 0;
+	flag = 0;
+	target = Board->bb[Black ^ me];
+	if (Current->score + 150 < beta) {
+		if (Current->all_att[me] & Board->bb[BlackPawn ^ me]) {
+		    target ^= Board->bb[BlackPawn ^ me];
+			curr_value = Current->score + 150;
+		}
+		if (Current->score + 450 < beta) {
+			if (Current->all_att[me] & (Board->bb[BlackKnight ^ me] | Board->bb[BlackLight ^ me] | Board->bb[BlackDark ^ me])) {
+				target ^= Board->bb[BlackKnight ^ me] | Board->bb[BlackLight ^ me] | Board->bb[BlackDark ^ me];
+			    curr_value = Current->score + 450;
+			}
+			if (Current->score + 650 < beta) {
+				if (Current->all_att[me] & Board->bb[BlackRook ^ me]) {
+					target ^= Board->bb[BlackRook ^ me];
+				    curr_value = Current->score + 650;
+				}
+			}
+		}
+	}
+	if (True(hash_move) && False(Board->square[To(hash_move)]) && False(hash_move & 0xD000)) {
+		if (is_check(hash_move)) flag = 1;
+		else {
+			if (Current->score + 30 < beta || depth <= 14) hash_move = 0;
+			goto checks;
+		}
+	}
 	if (hash_move) {
 		if (is_legal(hash_move)) {
+			if (Board->square[To(hash_move)]) cpt++; 
 		    do_move(hash_move);
 		    value = -q_search(1 - beta, new_depth, FlagNeatSearch);
 		    undo_move(hash_move);
-		    if (value >= beta) {
-			    hash_low(hash_move,beta,depth);
-			    return beta;
-		    }
+			if (value > curr_value) {
+				curr_value = value; 
+		        if (value >= beta) {
+			        hash_low(hash_move,value,Max(16, depth));
+			        return value;
+		        }
+			}
 		} else Current->killer[0] = 0;
 	}
-	target = Board->bb[Black ^ me];
-	if (Current->total_score < beta - 250) {
-		target ^= Board->bb[BlackPawn ^ me];
-		if (Current->total_score < beta - 450) {
-			target ^= Board->bb[BlackKnight ^ me] | Board->bb[BlackLight ^ me] | Board->bb[BlackDark ^ me];
-			if (Current->total_score < beta - 650) target ^= Board->bb[BlackRook ^ me];
+	if (flag) goto checks;
+	if (True(hash_move)) {
+		if (True(Board->square[To(hash_move)])) {
+			if (False(Bit(To(hash_move)) & target)) goto checks;
+			flag = 1;
 		}
 	}
 	gen_captures(target,Current->moves);
@@ -3248,18 +3939,27 @@ int q_search(int beta, int depth, int flags) {
 			}
 		}
         move &= 0xFFFF;
-		if (move == hash_move) continue;
-		if (depth < 16) if (False(see(move))) continue;
+		if (move == hash_move) {
+			flag = 0;
+			continue;
+		} else if (flag) continue;
+		if (False(see(move))) continue;
+		else cpt++;
 		do_move(move);
 		value = -q_search(1 - beta, new_depth, FlagNeatSearch);
 		undo_move(move);
-		if (value >= beta) {
-			hash_low(move,beta,depth);
-			Current->killer[0] = move;
-			return beta;
+		if (value > curr_value) {
+			curr_value = value;
+		    if (value >= beta) {
+			    hash_low(move,value,Max(16, depth));
+			    Current->killer[0] = move;
+			    return value;
+		    }
 		}
 	}
-	if (depth >= 4) {
+checks:
+	if (depth >= 14) {
+		Current->gen_flags |= FlagSkipBadChecks;
 		gen_checks(Board->bb[Black ^ me] ^ target,Current->moves);
 		for (p = Current->moves; *p != 0; p++) {
 		    move = *p;
@@ -3272,37 +3972,73 @@ int q_search(int beta, int depth, int flags) {
 		    }
             move &= 0xFFFF;
 			if (move == hash_move) continue;
-			if (depth < 16) if (False(Bit(From(move)) & Current->xray)) if (False(see(move))) continue;
+			if (False(Bit(From(move)) & Current->xray)) if (False(see(move))) continue;
 			do_move(move);
 			value = -q_evasion(1 - beta, new_depth, FlagNeatSearch);
 			undo_move(move);
-			if (value >= beta) {
-				hash_low(move,beta,depth);
-			    Current->killer[0] = move;
-			    return beta;
-			}
+			if (value > curr_value) {
+			    curr_value = value;
+		        if (value >= beta) {
+			        hash_low(move,value,Max(16, depth));
+			        Current->killer[0] = move;
+			        return value;
+		        }
+		    }
 		}
 	}
 
-	hash_high(beta - 1,depth);
-	return beta - 1;
+	if (depth >= 15 && False(cpt) && Current->score > beta - 30) {
+		Current->margin = beta - Current->score;
+		gen_delta_moves(Current->moves);
+		for (p = Current->moves; *p != 0; p++) {
+		    move = *p;
+		    for (q = p + 1; *q != 0; q++) {
+			    if (*q > *p) {
+				    *p = *q;
+				    *q = move;
+				    move = *p;
+			    }
+		    }
+            move &= 0xFFFF;
+			if (move == hash_move) continue;
+			if (False(see(move))) continue;
+			cpt++;
+			do_move(move);
+			value = -q_search(1 - beta, new_depth, FlagNeatSearch);
+			undo_move(move);
+			if (value > curr_value) {
+			    curr_value = value;
+		        if (value >= beta) {
+			        hash_low(move,value,Max(16, depth));
+			        Current->killer[0] = move;
+			        return value;
+		        }
+		    }
+			if (cpt >= 3) break;
+		}
+	}
+
+	hash_high(curr_value,Max(16, depth));
+	return curr_value;
 }
 
 int q_evasion(int beta, int depth, int flags) {
-	int i, value, move, *p, *q, new_depth, hash_move, hash_depth = -256;
+	int i, value, move, *p, *q, new_depth, hash_move, hash_depth, curr_value;
 	
+	curr_value = (Current - Data) - MateValue;
 	if (flags & FlagHaltCheck) {
-	    if ((Current - Data) - MateValue >= beta) return beta;
-	    if (MateValue - (Current - Data) < beta) return beta - 1;
+	    if (curr_value >= beta) return beta;
+	    if (-curr_value < beta) return beta - 1;
 	    halt_check;
 	}
+	if (flags & FlagOnlyCaptures) curr_value = beta - 1;
 	Current->killer[0] = hash_move = flags & 0xFFFF;
 	if (flags & FlagHashCheck) {
 	    hash_depth = 0;
 	    for (i = 0, Entry = Hash + (High32(Current->key) & hash_mask); i < 4; i++, Entry++) {
 		    if (Low32(Current->key) == Entry->key) {
-			    if (Entry->high_depth >= depth && Entry->high < beta) return beta - 1;
-			    if (Entry->low_depth >= depth && Entry->low >= beta) return beta;
+			    if (Entry->high_depth >= depth && Entry->high < beta) return Entry->high;
+			    if (Entry->low_depth >= depth && Entry->low >= beta) return Entry->low;
 			    if (Entry->move && Entry->low_depth > hash_depth) {
 				    Current->killer[0] = hash_move = Entry->move;
 				    hash_depth = Entry->low_depth;
@@ -3317,11 +4053,14 @@ int q_evasion(int beta, int depth, int flags) {
 	if (hash_move) {
 		if (is_legal(hash_move)) {
 			do_move(hash_move);
-			value = -q_search(1 - beta, new_depth, FlagNeatSearch);
+			value = -q_search(1 - beta, new_depth, FlagNeatSearch | FlagDisableDelta);
 			undo_move(hash_move);
-			if (value >= beta) {
-				hash_low(hash_move,beta,depth);
-			    return beta;
+			if (value > curr_value) {
+				curr_value = value;
+			    if (value >= beta) {
+				    hash_low(hash_move,value,Max(16, depth));
+			        return value;
+			    }
 			}
 		} else Current->killer[0] = 0;
 	}
@@ -3337,28 +4076,38 @@ int q_evasion(int beta, int depth, int flags) {
 		}
         move &= 0xFFFF;
 		if (move == hash_move) continue;
+		if (True(flags & FlagOnlyCaptures)) {
+			if (False(Board->square[To(move)]) && False(move & 0xE000)) break;
+			if (False(see(move))) break;
+		}
 		do_move(move);
-		value = -q_search(1 - beta, new_depth, FlagNeatSearch);
+		value = -q_search(1 - beta, new_depth, FlagNeatSearch | FlagDisableDelta);
 		undo_move(move);
-		if (value >= beta) {
-			hash_low(move,beta,depth);
-			Current->killer[0] = move;
-			return beta;
+		if (value > curr_value) {
+			curr_value = value;
+		    if (value >= beta) {
+			    hash_low(move,value,Max(16, depth));
+			    Current->killer[0] = move;
+			    return value;
+		    }
 		}
 	}
 	
-	hash_high(beta - 1, depth);
-	return beta - 1;
+	hash_high(curr_value, Max(16, depth));
+	return curr_value;
 }
 
 int search(int beta, int depth, int flags) {
-	int i, cnt, move, check, ext, me, hash_move, razoring, razor_margin, static_value, prune, singular, hash_depth = -256, hash_value = -MateValue, value, new_depth, *p;
+	int i, cnt, move, check, ext, me, hash_move, static_value, prune, singular, hash_depth, hash_value = -MateValue, value, new_depth, *p, curr_value;
 	uint64 target;
 #ifndef EPD_TESTING
 	if (nodes > check_node + 16384) {
 		check_node = nodes;
 		check_time(1);
 	}
+#ifdef KNS_TESTING
+	if (True(NodeLimit) && nodes >= NodeLimit * KN_FACTOR) longjmp(Jump,1);
+#endif
 #else
 	if (nodes >= MaxNodes) longjmp(Jump,1);
 #endif
@@ -3372,14 +4121,12 @@ int search(int beta, int depth, int flags) {
 	if (True(flags & FlagHashCheck) || depth > 24) {
 	    for (i = 0, Entry = Hash + (High32(Current->key) & hash_mask); i < 4; i++, Entry++) {
 		    if (Low32(Current->key) == Entry->key) {
-		        if (Entry->high_depth >= depth && Entry->high < beta) {
-				    Entry->date = date;
-				    return beta - 1;
-			    }
+				UpdateDate(Entry->date, date);
+		        if (Entry->high_depth >= depth && Entry->high < beta) return Entry->high;
 			    if (Entry->low_depth >= depth && Entry->low >= beta) {
-				    Entry->date = date;
-				    return beta;
-			    }
+					if (Entry->move) Current->killer[0] = Entry->move;
+					return Entry->low;
+				}
 			    if (Entry->move && Entry->low_depth > hash_depth) {
 				    Current->killer[0] = hash_move = Entry->move;
 				    hash_depth = Entry->low_depth;
@@ -3396,43 +4143,50 @@ int search(int beta, int depth, int flags) {
 	if (depth > 24) {
 		if (False(hash_move) || hash_depth < depth - 12 || hash_value < beta - ExclusionSingle) {
 			new_depth = depth - 8;
-			value = search(beta, new_depth, hash_move | FlagHashCheck);
+			value = search(beta, new_depth, hash_move | FlagHashCheck | FlagDisableDelta);
 			if (value >= beta) {
 				hash_move = Current->killer[0];
-				hash_value = beta;
+				hash_value = value;
 				hash_depth = new_depth;
 			} else if (True(prune)) {
-				value = search(beta - ExclusionSingle, new_depth, hash_move | FlagHashCheck);
+				value = search(beta - ExclusionSingle, new_depth, hash_move | FlagHashCheck | FlagDisableDelta);
 				if (value >= beta - ExclusionSingle) {
 					hash_move = Current->killer[0];
-					hash_value = beta - ExclusionSingle;
+					hash_value = value;
 					hash_depth = new_depth;
 				}
 			}
 		}
 	}
 	if (Board->bb[WhiteKing | me] & Current->all_att[me ^ 1]) return search_evasion(beta,depth,hash_move);
-	static_value = Current->total_score;
+	static_value = Current->score;
+	UpdateDeltaM;
 
-	razor_margin = 50 + (Max(depth - 16,0) << 4);
+	curr_value = Min(beta - 1, static_value + 5);
 	if (True(prune)) {
 		if (depth <= 18) {
-			if (static_value + razor_margin < beta) return q_search(beta, 18, hash_move | FlagHashCheck);
-			if (static_value >= beta + razor_margin) return beta;
-		} else if (static_value >= beta + (razor_margin << 1) && depth <= 22) return beta;
+			if (static_value + 12 + (Max(depth - 16, 0) << 3) < beta) return Max(static_value + 12 + (Max(depth - 16, 0) << 3), q_search(beta, 16, FlagHashCheck | hash_move));
+			if (static_value - (50 + (Max(depth - 16, 0) << 4)) >= beta) {
+				hash_low(0, static_value - (50 + (Max(depth - 16, 0) << 4)), depth);
+				return static_value - (50 + (Max(depth - 16, 0) << 4));
+			}
+		} else if (static_value - (100 + (Max(depth - 16, 0) << 5)) >= beta && depth <= 22) {
+			hash_low(0, static_value - (100 + (Max(depth - 16, 0) << 5)), depth);
+			return static_value - (100 + (Max(depth - 16, 0) << 5));
+		}
     }  
 
 	target = 0;
 	if ((static_value > beta + 5 || ((static_value >= beta || hash_value >= beta) && depth > 24)) 
-		&& True(prune) && False(flags & FlagNullSearch) && True(Material[Current->material & 0x0FFFFFFF] & 0x1F000000)) {
+		&& True(prune) && False(flags & FlagNullSearch) && True((Board->bb[me] ^ Board->bb[WhiteKing | me]) & (~Board->bb[WhitePawn | me]))) {
 		do_null();
 		new_depth = depth - 8;
-		if (new_depth <= 16) value = -q_search(1 - beta, new_depth, FlagHashCheck | FlagCallEvaluation | FlagNullSearch);
-		else value = -search(1 - beta, new_depth, FlagHashCheck | FlagCallEvaluation | FlagNullSearch);
+		if (new_depth <= 16) value = -q_search(1 - beta, new_depth, FlagHashCheck | FlagCallEvaluation | FlagNullSearch | FlagDisableDelta);
+		else value = -search(1 - beta, new_depth, FlagHashCheck | FlagCallEvaluation | FlagNullSearch | FlagDisableDelta);
 		undo_null();
 		if (value >= beta) {
-			hash_low(0,beta,depth);
-			return beta;
+			hash_low(0,value,Max(24, depth));
+			return value;
 		} else if (True((Current + 1)->killer[0]) && True(Board->square[To((Current + 1)->killer[0])])) Add(target, To((Current + 1)->killer[0]));
 	}
 
@@ -3457,61 +4211,80 @@ skip_exclusion:
 	cnt = 0;
 	if (hash_move) {
 		if (is_legal(move = hash_move)) {
-			new_depth = depth - 2 + Max(ext,singular);
+			new_depth = Max(16, depth - 2 + Max(ext,singular));
 		    do_move(move);
     		cnt++;
 			if (new_depth <= 16) value = -q_search(1 - beta, new_depth, FlagNeatSearch);
-    		else value = -search(1 - beta, new_depth, FlagNeatSearch);
+    		else value = -search(1 - beta, new_depth, FlagNeatSearch | (hash_value >= beta ? FlagNullSearch : 0));
 	    	if (value < -MateValue) cnt--;
 	    	undo_move(move);
-    		if (value >= beta) goto cut;
+			if (value > curr_value) {
+				curr_value = value;
+    		    if (value >= beta) goto cut;
+			}
 		} else Current->killer[0] = 0;
 	}
 	
 	Current->stage = 0;
-	razoring = 0;
-	if (True(prune) && depth <= 28 && static_value + razor_margin < beta) {
-		razoring = 1;
+	if (True(prune) && depth <= 21 && static_value + (50 + (Max(depth - 16, 0) << 4)) < beta) {
+		cnt = 1;
 		prune = 0;
 		Current->stage = 10;
 		Current->mask = Board->bb[me ^ 1];
-		if (depth <= 22 && static_value + razor_margin + 200 + (Max(depth - 16, 0) << 4) < beta) {
-			Current->mask ^= Board->bb[BlackPawn ^ me];
-			if (depth <= 18 && static_value + razor_margin + 400 + (Max(depth - 16, 0) << 5) < beta)
-				Current->mask ^= Board->bb[BlackKnight ^ me] | Board->bb[BlackLight ^ me] | Board->bb[BlackDark ^ me];
+		curr_value = static_value + (50 + (Max(depth - 16, 0) << 4));
+		if (static_value + (250 + (Max(depth - 16, 0) << 5)) < beta) {
+			if (Current->all_att[me] & Board->bb[BlackPawn ^ me]) {
+			    Current->mask ^= Board->bb[BlackPawn ^ me];
+			    curr_value = static_value + (250 + (Max(depth - 16, 0) << 5));
+			}
 		}
 	}
-
+	if (hash_depth >= depth) curr_value = Max(curr_value, hash_value);
 	while (True(move = get_move())) {
 		if (move == hash_move) continue;
 		cnt++;
 		ext = extension(move,0);
 		check = is_check(move);
-		if (depth <= 22 && cnt > Max(3, depth - 14) && Current->stage == 5 && False(ext) && False(check) && False(is_defence(move, target))) continue;
-		new_depth = depth - 2 + ext;
+		if (Current->stage == 5 && False(check) && False(ext)) {
+			if ((value = static_value + DeltaM(move) + (Max(depth - 16, 0) << 4) - (cnt << 1)) < beta && depth <= 28) {
+				curr_value = Max(curr_value, value);
+				continue;
+			}
+			if (cnt > HistoryMoveNb(depth) && False(is_defence(move, target))) continue;
+		}
+		new_depth = Max(16, depth - 2 + ext);
         do_move(move);
-		if (depth >= 22 && (Current - 1)->stage == 5 && False(ext) && False(check) && cnt > 3) new_depth = depth - 2 - Max(2, Min(36 - depth, msb(cnt)));
+#ifndef TUNABLE
+		if (depth >= 22 && (Current - 1)->stage == 5 && False(ext) && False(check) && cnt > 3) new_depth = Max(18, depth - 2 - msb(cnt));
+#else
+		if (depth >= 22 && True(LMR) && (Current - 1)->stage == 5 && False(ext) && False(check) && cnt > 3) new_depth = Max(18, depth - 2 - msb(cnt));
+#endif
 		if (new_depth <= 16) value = -q_search(1 - beta, new_depth, FlagNeatSearch);
 		else value = -search(1 - beta, new_depth, FlagNeatSearch);
 	    if (value >= beta && new_depth < depth - 2) {
 			new_depth = depth - 2;
-			if (new_depth <= 16) value = -q_search(1 - beta, new_depth, FlagCallEvaluation | FlagHaltCheck | Current->killer[0]);
-			else value = -search(1 - beta, new_depth, FlagCallEvaluation | (new_depth <= 24 ? 0 : FlagHashCheck) | FlagHaltCheck | Current->killer[0]);
+			if (new_depth <= 16) value = -q_search(1 - beta, new_depth, FlagNeatSearch | FlagDisableDelta | Current->killer[0]);
+			else value = -search(1 - beta, new_depth, FlagNeatSearch | FlagDisableDelta | Current->killer[0]);
 		}
 		undo_move(move);
-		if (value >= beta) goto cut;
-		else if (value < -MateValue) cnt--;
+		if (value > curr_value) {
+			curr_value = value;
+		    if (value >= beta) goto cut;
+		} else if (value < -MateValue) cnt--;
 	}
 
-	if (False(cnt) && False(razoring)) {
+	if (False(cnt)) {
 		value = 0;
 		move = 0;
-	    if (value >= beta) goto cut;
+		if (value > curr_value) {
+			curr_value = value;
+	        if (value >= beta) goto cut;
+		}
 	}
-	hash_high(beta - 1, depth);
-	return beta - 1;
+	hash_high(curr_value, depth);
+	return curr_value;
 cut:
-	hash_low(move,beta,depth);
+	hash_low(move,curr_value,depth);
 	Current->killer[0] = move;
 	if (True(move) && False(Board->square[To(move)]) && False(move & 0xE000)) {
 	    if (Current->killer[1] != move) {
@@ -3523,15 +4296,16 @@ cut:
 			for (p = Current->start; ((p + 1) < Current->current) && ((*p) & 0xFFFF) != move; p++) HistoryBad((*p) & 0xFFFF,depth);
 		}
     }
-	return beta;
+	return curr_value;
 }
 
 int search_evasion(int beta, int depth, int flags) {
-	int i, value, move, *p, *q, new_depth, hash_move, hash_depth = -256;
+	int cnt, i, value, move, *p, *q, new_depth, hash_move, hash_depth, curr_value;
 	
+	curr_value = (Current - Data) - MateValue;
 	if (flags & FlagHaltCheck) {
-	    if ((Current - Data) - MateValue >= beta) return beta;
-	    if (MateValue - (Current - Data) < beta) return beta - 1;
+	    if (curr_value >= beta) return beta;
+	    if (-curr_value < beta) return beta - 1;
 	    halt_check;
 	}
 	Current->killer[0] = hash_move = flags & 0xFFFF;
@@ -3539,14 +4313,9 @@ int search_evasion(int beta, int depth, int flags) {
 	    hash_depth = 0;
 	    for (i = 0, Entry = Hash + (High32(Current->key) & hash_mask); i < 4; i++, Entry++) {
 		    if (Low32(Current->key) == Entry->key) {
-			    if (Entry->high_depth >= depth && Entry->high < beta) {
-					Entry->date = date;
-					return beta - 1;
-				}
-			    if (Entry->low_depth >= depth && Entry->low >= beta) {
-					Entry->date = date;
-					return beta;
-				}
+				UpdateDate(Entry->date, date);
+			    if (Entry->high_depth >= depth && Entry->high < beta) return Entry->high;
+			    if (Entry->low_depth >= depth && Entry->low >= beta) return Entry->low;
 			    if (Entry->move && Entry->low_depth > hash_depth) {
 				    Current->killer[0] = hash_move = Entry->move;
 				    hash_depth = Entry->low_depth;
@@ -3557,15 +4326,20 @@ int search_evasion(int beta, int depth, int flags) {
 	if (flags & FlagCallEvaluation) get_attacks();
 	if (Board->bb[BlackKing ^ Current->turn] & Current->all_att[Current->turn]) return MateValue + 1;
 	new_depth = depth;
+	cnt = 0;
 	if (hash_move) {
 		if (is_legal(hash_move)) {
 			do_move(hash_move);
-			if (new_depth <= 16) value = -q_search(1 - beta, new_depth, FlagNeatSearch);
-		    else value = -search(1 - beta, new_depth, FlagNeatSearch);
+			cnt++;
+			if (new_depth <= 16) value = -q_search(1 - beta, new_depth, FlagNeatSearch | FlagDisableDelta);
+		    else value = -search(1 - beta, new_depth, FlagNeatSearch | FlagDisableDelta);
 			undo_move(hash_move);
-			if (value >= beta) {
-				hash_low(hash_move,beta,depth);
-			    return beta;
+			if (value > curr_value) {
+				curr_value = value;
+			    if (value >= beta) {
+				    hash_low(hash_move,value,depth);
+			        return value;
+			    }
 			}
 		} else Current->killer[0] = 0;
 	}
@@ -3581,19 +4355,30 @@ int search_evasion(int beta, int depth, int flags) {
 		}
         move &= 0xFFFF;
 		if (move == hash_move) continue;
+		new_depth = depth;
+		if (depth >= 22 && cnt >= 1) new_depth = Max(20, depth - 2 - cnt);
 		do_move(move);
-		if (new_depth <= 16) value = -q_search(1 - beta, new_depth, FlagNeatSearch);
-		else value = -search(1 - beta, new_depth, FlagNeatSearch);
+		cnt++;
+		if (new_depth <= 16) value = -q_search(1 - beta, new_depth, FlagNeatSearch | FlagDisableDelta);
+		else value = -search(1 - beta, new_depth, FlagNeatSearch | FlagDisableDelta);
+		if (value >= beta && new_depth < depth) {
+			new_depth = depth;
+			if (new_depth <= 16) value = -q_search(1 - beta, new_depth, FlagNeatSearch | FlagDisableDelta);
+		    else value = -search(1 - beta, new_depth, FlagNeatSearch | FlagDisableDelta);
+		}
 		undo_move(move);
-		if (value >= beta) {
-			hash_low(move,beta,depth);
-			Current->killer[0] = move;
-			return beta;
+		if (value > curr_value) {
+			curr_value = value;
+		    if (value >= beta) {
+			    hash_low(move,value,depth);
+			    Current->killer[0] = move;
+			    return value;
+		    }
 		}
 	}
 	
-	hash_high(beta - 1, depth);
-	return beta - 1;
+	hash_high(curr_value, depth);
+	return curr_value;
 }
 
 int exclusion(int beta, int depth, int killer) {
@@ -3617,7 +4402,7 @@ int exclusion(int beta, int depth, int killer) {
 }
 
 int qpv_search(int alpha, int beta, int depth) {
-	int i, move, me, hash_move, hash_depth = -256, value, *p, *q, new_depth, check, old_alpha = alpha, cnt = 0;
+	int i, move, me, hash_move, hash_depth, value, *p, *q, new_depth, check, old_alpha = alpha, cnt = 0;
 	uint64 target;
 
 	if ((Current - Data) - MateValue >= beta) return beta;
@@ -3635,13 +4420,16 @@ int qpv_search(int alpha, int beta, int depth) {
 		}
 	}
 	evaluate();
+	if (False(Current->capture) && False(Current->move & 0xE000) && True(Current->move)) UpdateDelta;
 	me = Current->turn;
 	if (Board->bb[BlackKing ^ me] & Current->all_att[me]) return MateValue + 1;
 	if (Board->bb[WhiteKing | me] & Current->all_att[me ^ 1]) check = 1;
 	else check = 0;
+	if (Current->score > 0) Current->score += 5;
+	else Current->score = Min(0, Current->score + 5);
 	if (False(check)) {
-		if (Current->total_score >= beta - 5) return beta;
-		if (Current->total_score > alpha) alpha = Current->total_score;
+		if (Current->score >= beta) return beta;
+		if (Current->score > alpha) alpha = Current->score;
 		if (False(Board->square[To(hash_move)])) hash_move = 0;
 		new_depth = depth - 2;
 	} else new_depth = depth - 1;
@@ -3652,10 +4440,11 @@ int qpv_search(int alpha, int beta, int depth) {
 		    cnt++;
 		    value = -qpv_search(-beta, -alpha, new_depth);
 		    undo_move(hash_move);
+			if (value < -MateValue) cnt--;
 		    if (value > alpha) {
 			    alpha = value;
 			    if (value >= beta) {
-			        hash_low_pv(hash_move,beta,depth);
+			        hash_low_pv(hash_move,beta,16);
 			        return beta;
 			    }
 		    }
@@ -3665,11 +4454,11 @@ int qpv_search(int alpha, int beta, int depth) {
 	target = Board->bb[Black ^ me];
 	if (check) gen_evasions(Current->moves);
 	else {
-		if (Current->total_score < alpha - 250) {
+		if (Current->score < alpha - 250) {
 		    target ^= Board->bb[BlackPawn ^ me];
-		    if (Current->total_score < alpha - 450) {
+		    if (Current->score < alpha - 450) {
 			    target ^= Board->bb[BlackKnight ^ me] | Board->bb[BlackLight ^ me] | Board->bb[BlackDark ^ me];
-			    if (Current->total_score < alpha - 650) target ^= Board->bb[BlackRook ^ me];
+			    if (Current->score < alpha - 650) target ^= Board->bb[BlackRook ^ me];
 		    }
 	    }
 	    gen_captures(target,Current->moves);
@@ -3694,17 +4483,18 @@ int qpv_search(int alpha, int beta, int depth) {
 			if (value > alpha) value = -qpv_search(-beta,-alpha,new_depth);
 		}
 		undo_move(move);
+		if (value < -MateValue) cnt--;
 		if (value > alpha) {
 			alpha = value;
 			Current->killer[0] = move;
 			if (value >= beta) {
-			    hash_low_pv(move,beta,depth);
+			    hash_low_pv(move,beta,16);
 		  	    return beta;
 			}
 		}
 	}
 
-	if (depth >= 4 && !check) {
+	if (depth >= 4 && False(check)) {
 		gen_checks(Board->bb[Black ^ me] ^ target,Current->moves);
 		for (p = Current->moves; *p != 0; p++) {
 		    move = *p;
@@ -3735,20 +4525,65 @@ int qpv_search(int alpha, int beta, int depth) {
 			    alpha = value;
 			    Current->killer[0] = move;
 			    if (value >= beta) {
-			        hash_low_pv(move,beta,depth);
+			        hash_low_pv(move,beta,16);
 		  	        return beta;
 			    }
 		    }
 		}
 	}
 
-	if (alpha > old_alpha) hash_low_pv(Current->killer[0],alpha,depth);
-	hash_high_pv(alpha,depth);
+	if (depth >= 15 && cnt <= 3 && False(check) && Current->score > beta - 30) {
+		Current->margin = beta - Current->score;
+		gen_delta_moves(Current->moves);
+		for (p = Current->moves; *p != 0; p++) {
+		    move = *p;
+		    for (q = p + 1; *q != 0; q++) {
+			    if (*q > *p) {
+				    *p = *q;
+				    *q = move;
+				    move = *p;
+			    }
+		    }
+            move &= 0xFFFF;
+			if (move == hash_move) continue;
+			do_move(move);
+			if (cnt == 1) {
+			    value = -qpv_search(-beta,-alpha,new_depth);
+		    } else {
+			    value = -q_search(-alpha, new_depth, FlagNeatSearch);
+			    if (value > alpha) value = -qpv_search(-beta,-alpha,new_depth);
+		    }
+			undo_move(move);
+			if (value > alpha) {
+			    alpha = value;
+			    Current->killer[0] = move;
+			    if (value >= beta) {
+			        hash_low_pv(move,beta,16);
+		  	        return beta;
+			    }
+		    }
+			if (cnt >= 6) break;
+		}
+	}
+
+	if (True(check) && False(cnt)) {
+		value = Convert(Current - Data,int) - MateValue;
+		if (value > alpha) {
+			alpha = value;
+	        if (value >= beta) {
+				hash_low_pv(move,beta,16);
+		  	    return beta;
+			}
+		} 
+	}
+
+	if (alpha > old_alpha) hash_low_pv(Current->killer[0],alpha,16);
+	hash_high_pv(alpha,16);
 	return alpha;
 }
 
 int pv_search(int alpha, int beta, int depth) {
-	int i, cnt, move, me, ext, hash_move, base_depth, singular, new_depth, hash_depth = -256, hash_value = -MateValue, value, check, old_alpha = alpha;
+	int i, cnt, move, me, ext, hash_move, base_depth, singular, new_depth, hash_depth, hash_value = -MateValue, value, check, old_alpha = alpha;
 
 	if ((Current - Data) - MateValue >= beta) return beta;
 	if (MateValue - (Current - Data) <= alpha) return alpha;
@@ -3756,8 +4591,41 @@ int pv_search(int alpha, int beta, int depth) {
 	if ((Current - Data) - MateValue > alpha) alpha = Convert(Current - Data,int) - MateValue;
 	Current->killer[0] = hash_move = 0;
 	hash_depth = 0;
+#ifdef TUNABLE
 	for (i = 0, Entry = Hash + (High32(Current->key) & hash_mask); i < 4; i++, Entry++) {
 		if (Low32(Current->key) == Entry->key) {
+			if (Entry->low_depth == 127) {
+				alpha = Max(alpha, Entry->low);
+				if (alpha >= beta) return beta;
+			} else if (Entry->high_depth == 127) {
+				beta = Min(beta, Entry->high);
+				if (alpha >= beta) return alpha;
+			}
+		}
+	}
+#endif
+#ifndef KNS_TESTING
+#ifndef TUNABLE
+	if (False(Infinite) || depth <= 24) {
+#else
+	if (False(Infinite) || depth <= 24 || True(PVHashing)) {
+#endif
+#else
+	if (1) {
+#endif
+	    for (i = 0, PVEntry = PVHash + (High32(Current->key) & pv_hash_mask); i < pv_cluster_size; i++, PVEntry++) {
+		    if (PVEntry->key == Low32(Current->key)) {
+			    PVEntry->date = date;
+			    if (PVEntry->depth >= depth) {
+				    if (PVEntry->move) Current->killer[0] = PVEntry->move;
+				    return PVEntry->value;
+			    }
+		    }
+	    }
+	}
+	for (i = 0, Entry = Hash + (High32(Current->key) & hash_mask); i < 4; i++, Entry++) {
+		if (Low32(Current->key) == Entry->key) {
+			UpdateDate(Entry->date, date);
 		    if (Entry->move && Entry->low_depth > hash_depth) {
 				Current->killer[0] = hash_move = Entry->move;
 				hash_depth = Entry->low_depth;
@@ -3766,23 +4634,24 @@ int pv_search(int alpha, int beta, int depth) {
 		}
 	}
 	evaluate();
+	if (False(Current->capture) && False(Current->move & 0xE000) && True(Current->move)) UpdateDelta;
 	if ((False(hash_move) || hash_depth < depth - 4) && depth >= 19) {
-		value = pv_search(alpha, beta, depth - 2);
+		value = pv_search(alpha, beta, depth - 3);
 		if (value <= alpha) {
-			value = search(alpha - 20, depth - 2, hash_move | FlagHashCheck);
-			if (value >= alpha - 20) {
+			value = search(alpha - ExclusionSingle, depth - 4, hash_move | FlagHashCheck);
+			if (value >= alpha - ExclusionSingle) {
 				hash_move = Current->killer[0];
 			    hash_value = value;
-			    hash_depth = depth - 2;
-			} else if (depth >= 20) {
-				value = search(alpha - 40, depth - 3, hash_move | FlagHashCheck);
-				if (value >= alpha - 40) {
+			    hash_depth = depth - 4;
+			} else if (depth >= 20 && alpha > -EvalValue) {
+				value = search(alpha - ExclusionDouble, depth - 4, hash_move | FlagHashCheck);
+				if (value >= alpha - ExclusionDouble) {
 					hash_move = Current->killer[0];
 			        hash_value = value;
-			        hash_depth = depth - 3;
+			        hash_depth = depth - 4;
 				} else if (depth >= 21) {
-					value = search(alpha - 80, depth - 4, hash_move | FlagHashCheck);
-				    if (value >= alpha - 80) {
+					value = search(alpha - (2 * ExclusionDouble), depth - 4, hash_move | FlagHashCheck);
+				    if (value >= alpha - (2 * ExclusionDouble)) {
 					    hash_move = Current->killer[0];
 			            hash_value = value;
 			            hash_depth = depth - 4;
@@ -3792,7 +4661,13 @@ int pv_search(int alpha, int beta, int depth) {
 		} else {
 			hash_move = Current->killer[0];
 			hash_value = value;
-			hash_depth = depth - 2;
+			hash_depth = depth - 3;
+		}
+	} else if (depth > 24) {
+		value = pv_search(alpha, beta, depth - 4);
+		if (value > alpha) {
+			hash_value = Max(hash_value, value);
+			hash_move = Current->killer[0];
 		}
 	}
 
@@ -3874,7 +4749,7 @@ int pv_search(int alpha, int beta, int depth) {
 		    if (value >= beta) goto cut;
 		}
     }
-	if (!cnt) {
+	if (False(cnt)) {
 		move = 0;
 		if (check) value = Convert(Current - Data,int) - MateValue;
 		else value = 0;
@@ -3911,7 +4786,7 @@ void root() {
 	memcpy(SaveBoard,Board,sizeof(GBoard));
 	Current = Data;
 	Easy = 1;
-	get_attacks();
+	evaluate();
 	gen_legal_moves();
 	if (PVN > 1) {
 		memset(MultiPV,0,128 * sizeof(int));
@@ -3920,7 +4795,7 @@ void root() {
 	best_move = Current->moves[0];
 	if (False(best_move)) return;
 	if (False(Infinite) && False(Current->moves[1])) {
-		Current->total_score = value = root_search(-MateValue, MateValue, 18);
+		Current->score = value = root_search(-MateValue, MateValue, 18);
 		LastDepth = 128;
 		send_pv(6, -MateValue, MateValue, value);
 		send_best_move();
@@ -3960,30 +4835,41 @@ void root() {
 	}
 	Bad = 0;
 	Change = 0;
+#ifndef TUNABLE
 	for (depth = 18; depth < DepthLimit; depth += 2) {
+#else
+	for (depth = 18; depth < DepthLimit; depth += (HalfPlySearch ? 1 : 2)) {
+#endif
 		memset(Data + 1, 0, 127 * sizeof(GData));
 #ifndef ASPIRATION
 		if (PVN > 1) value = multipv(depth);
-		else Current->total_score = value = root_search(-MateValue, MateValue, depth);
+		else Current->score = value = root_search(-MateValue, MateValue, depth);
 #else
 		if (PVN > 1) value = multipv(depth);
-		else if (OutputDepth(depth) < 7) Current->total_score = value = root_search(-MateValue, MateValue, depth);
+#ifndef TUNABLE
+		else if (OutputDepth(depth) < 7) Current->score = value = root_search(-MateValue, MateValue, depth);
+#else
+		else if (OutputDepth(depth) < 7 || False(Aspiration)) Current->score = value = root_search(-MateValue, MateValue, depth);
+#endif
 		else {
-			delta = 15;
+			delta = ExclusionSingle;
 			alpha = previous - delta;
 			beta = previous + delta;
 loop:
-			if (delta >= 15 * 32) {
-				Current->total_score = value = root_search(-MateValue, MateValue, depth);
+			if (delta >= ExclusionSingle * 32) {
+				Current->score = value = root_search(-MateValue, MateValue, depth);
 				goto finish;
 			}
-			Current->total_score = value = root_search(alpha, beta, depth);
+			Current->score = value = root_search(alpha, beta, depth);
 			if (value <= alpha) {
+#ifdef TUNABLE
+				if (OutputDepth(depth) > 5 && True(ExtendedInfo)) send_pv(OutputDepth(depth),alpha,beta,value);
+#endif
 				alpha -= delta;
 				delta *= 2;
 				goto loop;
 			} else if (value >= beta) {
-				if (OutputDepth(depth) > 5) send_pv(OutputDepth(depth),alpha,beta,value);
+				if (OutputDepth(depth) > 8) send_pv(OutputDepth(depth),alpha,beta,value);
 				beta += delta;
 				delta *= 2;
 				LastDepth = depth;
@@ -3996,7 +4882,7 @@ loop:
 		}
 finish:
 #endif
-		if (OutputDepth(depth) > 5 && PVN == 1) send_pv(OutputDepth(depth),-MateValue,MateValue,value);
+		if (OutputDepth(depth) > 8 && PVN == 1) send_pv(OutputDepth(depth),-MateValue,MateValue,value);
 		if (value < previous - 50) Bad = 1;
 		else Bad = 0;
 		LastDepth = depth;
@@ -4009,14 +4895,17 @@ finish:
 }
 
 int root_search(int alpha, int beta, int depth) {
-	int *p, *q, *r, move, value, old_alpha = alpha, cnt, new_depth = depth - 2, old_best, fail_low = 0;
+	int *p, *q, *r, move, value, old_alpha = alpha, cnt, new_depth, old_best, fail_low = 0;
 	Early = 1;
-	Current->moves[0] |= 1 << 20;
-	if (True(Print)) fprintf(stdout,"info depth %d\n",OutputDepth(depth)); fflush(stdout);
+	Current->moves[0] |= 1 << 21;
+#ifndef KNS_TESTING
+	if (True(Print))
+#endif
+	fprintf(stdout,"info depth %d\n",OutputDepth(depth)); fflush(stdout);
 	for (p = Current->moves, cnt = 1; True(move = ((*p) & 0xFFFF)); p++, cnt++) {
-		*p = move;
 		move_to_string(move,score_string);
 		if (True(Print)) sprintf(info_string,"info currmove %s currmovenumber %d\n",score_string,cnt);
+		new_depth = depth - 2 + extension(move, 1);
 		do_move(move);
 		if (p == (Current - 1)->moves) {
 			value = -pv_search(-beta,-alpha,new_depth);
@@ -4038,7 +4927,8 @@ int root_search(int alpha, int beta, int depth) {
 		if (value > alpha) {
 			alpha = value;
 			best_move = move;
-			*p |= cnt << 20;
+			best_score = value;
+			*p |= cnt << 21;
 			hash_low_pv(best_move,value,depth);
 			if (value >= beta) goto cut;
 		}
@@ -4057,6 +4947,7 @@ int root_search(int alpha, int beta, int depth) {
 			}
 		}
 	}
+	for (p = Current->moves; True(*p); p++) *p &= 0xFFFF;
 	return alpha;
 cut:
 	hash_low_pv(best_move,beta,depth);
@@ -4073,16 +4964,18 @@ cut:
 			}
 		}
 	}
+	for (p = Current->moves; True(*p); p++) *p &= 0xFFFF;
 	return beta;
 }
 
 int multipv(int depth) {
-	int move, low = MateValue, value, i, cnt, new_depth = depth - 2;
+	int move, low = MateValue, value, i, cnt, new_depth = depth;
 	fprintf(stdout,"info depth %d\n",OutputDepth(depth)); fflush(stdout);
 	for (cnt = 0; cnt < PVN && True(move = (MultiPV[cnt] & 0xFFFF)); cnt++) {
 		MultiPV[cnt] = move;
 		move_to_string(move,score_string);
 		if (True(Print)) sprintf(info_string,"info currmove %s currmovenumber %d\n",score_string,cnt + 1);
+		new_depth = depth - 2 + extension(move, 1);
 		do_move(move);
 		value = -pv_search(-MateValue,MateValue,new_depth);
 		MultiPV[cnt] |= value << 16;
@@ -4095,13 +4988,14 @@ int multipv(int depth) {
 			}
 		}
 		best_move = MultiPV[0] & 0xFFFF;
-		Current->total_score = MultiPV[0] >> 16;
+		Current->score = MultiPV[0] >> 16;
 		send_multipv(OutputDepth(depth), cnt);
 	}
 	for (;True(move = (MultiPV[cnt] & 0xFFFF)); cnt++) {
 		MultiPV[cnt] = move;
 		move_to_string(move,score_string);
 		if (True(Print)) sprintf(info_string,"info currmove %s currmovenumber %d\n",score_string,cnt + 1);
+		new_depth = depth - 2 + extension(move, 1);
 		do_move(move);
 		value = -search(-low, new_depth, FlagNeatSearch);
 		if (value > low) value = -pv_search(-MateValue,-low,new_depth);
@@ -4117,22 +5011,27 @@ int multipv(int depth) {
 				}
 			}
 			best_move = MultiPV[0] & 0xFFFF;
-		    Current->total_score = MultiPV[0] >> 16;
+		    Current->score = MultiPV[0] >> 16;
 			low = MultiPV[PVN - 1] >> 16;
 			send_multipv(OutputDepth(depth), cnt);
 		}
 	}
-	return Current->total_score;
+	return Current->score;
 }
 
 void send_pv(int depth, int alpha, int beta, int score) {
 	int i, pos, move, sel_depth;
+	sint64 nps;
 	if (False(Print)) return;
 	for (sel_depth = 1; sel_depth < 127 && True((Data + sel_depth)->key); sel_depth++);
 	sel_depth--;
 	pv_length = 64;
-	pvp = 0;
+	if (False(move = Current->moves[0])) return;
+	PV[0] = move;
+	do_move(move);
+	pvp = 1;
 	pick_pv();
+	undo_move(move);
 	pos = 0;
 	for (i = 0; i < 64 && True(PV[i]); i++) {
 		if (pos > 0) { 
@@ -4168,13 +5067,18 @@ void send_pv(int depth, int alpha, int beta, int score) {
 		score_string[2] = ' ';
 		score_string[3] = 0;
 	}
-	if (score < beta) fprintf(stdout,"info depth %d seldepth %d score %s%d nodes %I64d pv %s\n",depth,sel_depth,score_string,score,nodes,pv_string);
-	else fprintf(stdout,"info depth %d seldepth %d score %s%d lowerbound nodes %I64d pv %s\n",depth,sel_depth,score_string,score,nodes,pv_string);
+	nps = GetTickCount() - StartTime;
+	if (nps) nps = (nodes * 1000)/nps; 
+	if (score < beta) {
+		if (score <= alpha) fprintf(stdout,"info depth %d seldepth %d score %s%d upperbound nodes %I64d nps %I64d pv %s\n",depth,sel_depth,score_string,score,nodes,nps,pv_string);
+		else fprintf(stdout,"info depth %d seldepth %d score %s%d nodes %I64d nps %I64d pv %s\n",depth,sel_depth,score_string,score,nodes,nps,pv_string);
+	} else fprintf(stdout,"info depth %d seldepth %d score %s%d lowerbound nodes %I64d nps %I64d pv %s\n",depth,sel_depth,score_string,score,nodes,nps,pv_string);
 	fflush(stdout);
 }
 
 void send_multipv(int depth, int curr_number) {
 	int i, j, pos, move, score;
+	sint64 nps;
 	if (False(Print)) return;
 	for (j = 0; j < PVN && True(MultiPV[j]); j++) {
 		pv_length = 63;
@@ -4222,15 +5126,19 @@ void send_multipv(int depth, int curr_number) {
 			score_string[2] = ' ';
 			score_string[3] = 0;
 		}
-		fprintf(stdout,"info multipv %d depth %d score %s%d nodes %I64d pv %s\n",j + 1,(j <= curr_number ? depth : depth - 1),score_string,score,nodes,pv_string);
+		nps = GetTickCount() - StartTime;
+	    if (nps) nps = (nodes * 1000)/nps;
+		fprintf(stdout,"info multipv %d depth %d score %s%d nodes %I64d nps %I64d pv %s\n",j + 1,(j <= curr_number ? depth : depth - 1),score_string,score,nodes,nps,pv_string);
 		fflush(stdout);
 	}
 }
 
 void send_best_move() {
 	int ponder;
+#ifndef KNS_TESTING
 	if (False(Print)) return;
-    fprintf(stdout,"info nodes %I64d\n",nodes);
+#endif
+	fprintf(stdout,"info nodes %I64d score cp %d\n",nodes,best_score);
 	if (!best_move) return;
 	Current = Data;
 	do_move(best_move);
@@ -4281,9 +5189,12 @@ void get_position(char string[]) {
 
 void get_time_limit(char string[]) {
 	const char * ptr;
-	int time, inc, wtime, btime, winc, binc, moves, pondering;
+	int i, time, inc, wtime, btime, winc, binc, moves, pondering, movetime = 0;
   
 	Infinite = 1;
+	MoveTime = 0;
+	SearchMoves = 0;
+	SMPointer = 0;
 	pondering = 0;
 	TimeLimit1 = 0;
 	TimeLimit2 = 0;
@@ -4320,6 +5231,31 @@ void get_time_limit(char string[]) {
 			ptr = strtok(NULL," "); 
 			wtime = atoi(ptr); 
 			Infinite = 0;
+		} else if (!strcmp(ptr,"movetime")) { 
+			ptr = strtok(NULL," "); 
+			movetime = atoi(ptr);
+			MoveTime = 1;
+			Infinite = 0;
+		} else if (!strcmp(ptr,"searchmoves")) {
+			if (False(SearchMoves)) {
+				for (i = 0; i < 256; i++) SMoves[i] = 0;
+			}
+		    SearchMoves = 1;
+		    ptr += 12;
+			while (ptr != NULL && ptr[0] >= 'a' && ptr[0] <= 'h' && ptr[1] >= '1' && ptr[1] <= '8') {
+				pv_string[0] = *ptr++;
+                pv_string[1] = *ptr++;
+                pv_string[2] = *ptr++;
+                pv_string[3] = *ptr++;
+                if (*ptr == 0 || *ptr == ' ') pv_string[4] = 0;
+                else { 
+				    pv_string[4] = *ptr++; 
+				    pv_string[5] = 0; 
+			    }
+				SMoves[SMPointer] = move_from_string(pv_string);
+				SMPointer++;
+				ptr = strtok(NULL," ");
+			}
 		} else if (!strcmp(ptr,"ponder")) pondering = 1;
     }
 	if (pondering) Infinite = 1;
@@ -4338,6 +5274,10 @@ void get_time_limit(char string[]) {
 		TimeLimit1 = ((time + (inc * moves)) * 30)/(moves * TimeValue);
 	} else TimeLimit1 = (time + inc * 30)/TimeValue;
 	if (Ponder) TimeLimit1 = (TimeLimit1 * PonderRatio)/16;
+	if (MoveTime) {
+		TimeLimit2 = movetime;
+		TimeLimit1 = TimeLimit2 * 100;
+	}
     InfoTime = StartTime = GetTickCount();
 	Searching = 1;
 	if (False(Infinite)) PVN = 1;
@@ -4360,13 +5300,16 @@ void check_time(int searching) {
 	if (True(Infinite)) return;
 	if (Time > TimeLimit2) goto jump;
 	if (False(searching)) {
-		if (2 * Time > TimeLimit2) goto jump;
+		if (2 * Time > TimeLimit2 && False(MoveTime)) goto jump;
 		if (False(Bad)) {
 			if (Time > TimeLimit1) goto jump;
 			if (False(Change) && Time * 16 > TimeLimit1 * NormalMargin) goto jump;
 			if (True(Early) && Time * 16 > TimeLimit1 * EarlyMargin) goto jump;
 			if (True(Easy) && Time * 16 > TimeLimit1 * EasyMargin) goto jump;
 		}
+#ifdef KNS_TESTING
+		if (True(NodeLimit) && nodes >= NodeLimit) goto jump;
+#endif
 	}
 	return;
 jump:
@@ -4378,11 +5321,14 @@ void init_search() {
 	int i, j;
 	memset(Hash,0,hash_size * sizeof(GEntry));
 	for (i = 0; i < 16; i++)
-		for (j = 0; j < 64; j++)
+		for (j = 0; j < 64; j++) {
 			History[i][j] = HistoryLoss(1);
+			Delta[i][j] = 0;
+		}
 	init_board(StartPos);
 	PVN = 1;
 	Infinite = 1;
+	SearchMoves = 0;
 	TimeLimit1 = TimeLimit2 = 0;
 	Stop = Searching = 0;
 	DepthLimit = 128;
@@ -4434,6 +5380,26 @@ void bench(char string[]) {
 	init_board(B8); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 8, nodes = %I64d\n",nodes); date++;
 	init_board(B9); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 9, nodes = %I64d\n",nodes); date++;
 	init_board(B10); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 10, nodes = %I64d\n",nodes); date++;
+	init_board(B11); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 11, nodes = %I64d\n",nodes); date++;
+	init_board(B12); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 12, nodes = %I64d\n",nodes); date++;
+	init_board(B13); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 13, nodes = %I64d\n",nodes); date++;
+	init_board(B14); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 14, nodes = %I64d\n",nodes); date++;
+	init_board(B15); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 15, nodes = %I64d\n",nodes); date++;
+	init_board(B16); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 16, nodes = %I64d\n",nodes); date++;
+	init_board(B17); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 17, nodes = %I64d\n",nodes); date++;
+	init_board(B18); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 18, nodes = %I64d\n",nodes); date++;
+	init_board(B19); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 19, nodes = %I64d\n",nodes); date++;
+	init_board(B20); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 20, nodes = %I64d\n",nodes); date++;
+	init_board(B21); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 21, nodes = %I64d\n",nodes); date++;
+	init_board(B22); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 22, nodes = %I64d\n",nodes); date++;
+	init_board(B23); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 23, nodes = %I64d\n",nodes); date++;
+	init_board(B24); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 24, nodes = %I64d\n",nodes); date++;
+	init_board(B25); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 25, nodes = %I64d\n",nodes); date++;
+	init_board(B26); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 26, nodes = %I64d\n",nodes); date++;
+	init_board(B27); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 27, nodes = %I64d\n",nodes); date++;
+	init_board(B28); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 28, nodes = %I64d\n",nodes); date++;
+	init_board(B29); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 29, nodes = %I64d\n",nodes); date++;
+	init_board(B30); pv_search(-MateValue,MateValue,depth); fprintf(stdout,"Positions parsed: 30, nodes = %I64d\n",nodes); date++;
 #ifndef CPU_TIMING
 	delta = GetTickCount() - Time;
 #else
@@ -4445,6 +5411,32 @@ void bench(char string[]) {
 }
 
 #ifdef EPD_TESTING
+void flip_board_root() {
+	int i, flags = 0, square[64];
+	for (i = 0; i < 64; i++) {
+		if (Board->square[File(i) + ((7 - Rank(i)) << 3)]) square[i] = Board->square[File(i) + ((7 - Rank(i)) << 3)] ^ 1;
+		else square[i] = 0;
+	}
+	for (i = 0; i < 64; i++) Board->square[i] = square[i];
+	if (Current->flags & CanCastle_OO) flags |= CanCastle_oo;
+	if (Current->flags & CanCastle_OOO) flags |= CanCastle_ooo;
+	if (Current->flags & CanCastle_oo) flags |= CanCastle_OO;
+	if (Current->flags & CanCastle_ooo) flags |= CanCastle_OOO;
+	Current->flags = flags;
+	Current->turn ^= 1;
+	init_board();
+}
+int test_eval() {
+	int value, flag = 0;
+	evaluate();
+	value = Current->score;
+	flip_board_root();
+	evaluate();
+	if (Current->score != value) flag = 1;
+	flip_board_root();
+	if (flag) return 0;
+	else return 1;
+}
 void epd(char string[]) {
 	int n = 0, positions = 100, AD = 0;
 	sint64 SetMaxNodes = 1024 * 1024;
@@ -4473,6 +5465,10 @@ void epd(char string[]) {
 		ptr = strchr(input_string, '\n');
         if (ptr != NULL) *ptr = 0;
 		init_board(input_string);
+		if (!test_eval()) {
+			fprintf(stdout,"Eval assymetry detected: < %d >!\n",n+1);
+			getchar();
+		}
 		Print = 0;
 		root();
 		Print = 1;
@@ -4509,11 +5505,31 @@ void uci() {
     ptr = strchr(input_string, '\n');
     if (ptr != NULL) *ptr = 0;
     if (!strcmp(input_string, "uci")) {
-        fprintf(stdout,"id name Gull 1.0\n");
+#ifdef W32_BUILD
+        fprintf(stdout,"id name Gull 1.2\n");
+#else
+		fprintf(stdout,"id name Gull 1.2 x64\n");
+#endif
         fprintf(stdout,"id author ThinkingALot\n");
-		fprintf(stdout,"option name Hash type spin min 4 max 1024 default 64\n");
+		fprintf(stdout,"option name Hash type spin min 1 max 1024 default 64\n");
 		fprintf(stdout,"option name Ponder type check default false\n");
 		fprintf(stdout,"option name MultiPV type spin min 1 max 64 default 1\n");
+		fprintf(stdout,"option name Clear Hash type button\n");
+#ifdef TUNABLE
+		fprintf(stdout,"option name Aspiration Search type check default true\n");
+		fprintf(stdout,"option name 1/2 Ply Search type check default false\n");
+		fprintf(stdout,"option name LMR type check default true\n");
+		fprintf(stdout,"option name PV Hashing type check default false\n");
+		fprintf(stdout,"option name Extended Info type check default true\n");
+		fprintf(stdout,"option name Space Evaluation type check default false\n");
+		fprintf(stdout,"option name Favor type combo default None var White var None var Black\n");
+		fprintf(stdout,"option name +- Evaluation type button\n");
+		fprintf(stdout,"option name = Evaluation type button\n");
+		fprintf(stdout,"option name -+ Evaluation type button\n");
+#endif
+#ifdef KNS_TESTING
+		fprintf(stdout,"option name kN type spin min 1 max 1024 default 1024\n");
+#endif
         fprintf(stdout,"uciok\n");
 		if (False(Searching)) init_search();
     } else if (!strcmp(input_string,"ucinewgame")) {
@@ -4532,18 +5548,11 @@ void uci() {
 			if (!memcmp(ptr,"Hash",4) && False(Searching)) {
 				ptr += 11;
 				value = atoi(ptr);
-				if (value < 4) value = 4;
+				if (value < 1) value = 1;
 				if (value > 1024) value = 1024;
 				hash_size = ((1 << (msb(value))) * 1024 * 1024)/sizeof(GEntry);
 				hash_mask = hash_size - 4;
-				free(HashBase);
-				HashBase = (GEntry*)malloc(hash_size * sizeof(GEntry));
-				Hash = HashBase;
-				for (int i = 0; i < 3; i++) {
-		            if True(((DWORD)((void *)Hash)) & 0x3F) Hash++;
-		            else break;
-	            }
-	    		memset(Hash,0,hash_size * sizeof(GEntry));
+				init_hash();
 			} else if (!memcmp(ptr,"MultiPV",7)) {
 				ptr += 14;
 			    PVN = atoi(ptr);
@@ -4552,10 +5561,63 @@ void uci() {
 				ptr += 13;
 				if (ptr[0] == 't') Ponder = 1;
 				else Ponder = 0;
+			} else if (!memcmp(ptr,"Clear",5)) {
+				memset(Hash,0,hash_size * sizeof(GEntry));
+				memset(PVHash,0,pv_hash_size * sizeof(GPVEntry));
 			}
+#ifdef TUNABLE
+			else if (!memcmp(ptr,"Aspiration", 10)) {
+				ptr += 24;
+				if (ptr[0] == 't') Aspiration = 1;
+				else Aspiration = 0;
+			} else if (!memcmp(ptr,"LMR", 3)) {
+				ptr += 10;
+				if (ptr[0] == 't') LMR = 1;
+				else LMR = 0;
+			} else if (!memcmp(ptr,"PV", 2)) {
+				ptr += 17;
+				if (ptr[0] == 't') PVHashing = 1;
+				else PVHashing = 0;
+			} else if (!memcmp(ptr,"Extended", 8)) {
+				ptr += 20;
+				if (ptr[0] == 't') ExtendedInfo = 1;
+				else ExtendedInfo = 0;
+			} else if (!memcmp(ptr,"1/2",3)) {
+				ptr += 21;
+				if (ptr[0] == 't') HalfPlySearch = 1;
+				else HalfPlySearch = 0;
+			} else if (!memcmp(ptr,"+-",2)) {
+				if (Current->turn) hash_high_forced(-EvalValue - 1);
+				else hash_low_forced(EvalValue + 1);
+			} else if (!memcmp(ptr,"=",1)) {
+				hash_low_forced(0);
+				hash_high_forced(0);
+				hash_exact(0, 0, 127);
+			} else if (!memcmp(ptr,"-+",2)) {
+				if (Current->turn) hash_low_forced(EvalValue + 1);
+				else hash_high_forced(-EvalValue - 1);
+			} else if (!memcmp(ptr,"Favor",5)) {
+				ptr += 12;
+				if (ptr[0] == 'W') Favor = 1;
+				else if (ptr[0] == 'B') Favor = -1;
+				else Favor = 0;
+			} else if (!memcmp(ptr,"Space",5)) {
+				ptr += 12;
+				if (ptr[0] == 't') Space = 1;
+				else Space = 0;
+			}
+#endif
+#ifdef KNS_TESTING
+			else if (!memcmp(ptr,"kN",2)) {
+				ptr += 9;
+				NodeLimit = 1024 * atoi(ptr);
+			}
+#endif
         }
-	} else if (!strcmp(input_string,"stop")) Stop = 1;
-	else if (!strcmp(input_string,"ponderhit")) {
+	} else if (!strcmp(input_string,"stop")) {
+		Stop = 1;
+		if (False(Searching)) send_best_move();
+	} else if (!strcmp(input_string,"ponderhit")) {
 		Infinite = 0;
 		if (LastTime > TimeLimit1) Stop = 1;
 		if (False(Change) && LastTime * 16 > TimeLimit1 * NormalMargin) Stop = 1;
@@ -4564,7 +5626,8 @@ void uci() {
 		if (False(Searching)) send_best_move();
 	}
     else if (!strcmp(input_string,"quit")) {
-		free(HashBase);
+		if (False(virtual_mem)) free(HashBase);
+		else VirtualFree((DWORD*)HashBase, 0, MEM_RELEASE);
 		exit(0);
 	}
 	else if (!memcmp(input_string,"bench",5)) bench(input_string);
@@ -4575,15 +5638,20 @@ void uci() {
 
 void main() {
 	DWORD p;
+	int CPUInfo[4] = {-1};
+    __cpuid(CPUInfo, 0x00000001);
+    HardwarePopCnt = (CPUInfo[2] >> 23) & 1;
+
+	StreamHandle = GetStdHandle(STD_INPUT_HANDLE);
+	Console = GetConsoleMode(StreamHandle,&p);
+	if (Console) {
+		SetConsoleMode(StreamHandle,p & (~(ENABLE_MOUSE_INPUT | ENABLE_WINDOW_INPUT)));
+		FlushConsoleInputBuffer(StreamHandle);
+	}
+
 	date = 1;
 	Ponder = 0;
-	HashBase = (GEntry*)malloc((hash_size * sizeof(GEntry)) + 64);
-	Hash = HashBase;
-	for (int i = 0; i < 3; i++) {
-		if True(((DWORD)((void *)Hash)) & 0x3F) Hash++;
-		else break;
-	}
-	memset(Hash,0,hash_size * sizeof(GEntry));
+	init_hash();
 	memset(Data,0,128 * sizeof(GData));
 	init();
 
@@ -4605,13 +5673,11 @@ void main() {
     setvbuf(stdin, NULL, _IONBF, 0);
     fflush(NULL);
 
-	StreamHandle = GetStdHandle(STD_INPUT_HANDLE);
-	Console = GetConsoleMode(StreamHandle,&p);
-	if (Console) {
-		SetConsoleMode(StreamHandle,p & (~(ENABLE_MOUSE_INPUT | ENABLE_WINDOW_INPUT)));
-		FlushConsoleInputBuffer(StreamHandle);
-	}
-	fprintf(stdout,"Gull 1.0\n\n");
+#ifdef W32_BUILD
+	fprintf(stdout,"Gull 1.2\n\n");
+#else
+	fprintf(stdout,"Gull 1.2 x64\n\n");
+#endif
 #ifdef CPU_TIMING
 	CurrentHandle = GetCurrentProcess();
 #endif
