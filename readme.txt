@@ -1,3 +1,11 @@
+Gull 2.8 beta @ 26.01.2014
+	Full evaluation rewrite. Gull is back to being an original engine.
+	Minor search tweaks.
+
+	Beta status due to unrefined source code (the evaluation function was just copy-pasted from Gull 2.9 alpha)
+	BMI2 build provides a small speedup on CPUs with BMI2 instruction set support (Intel Haswell).
+	For testing under ChessGUI it may be better to use the version with automatic affinity turned off.
+
 Gull 2.3 @ 17.10.2013
 	Minor search tweaks.
 
@@ -49,3 +57,5 @@ Gull II beta @ 16.07.2012
 	P.S. Gull employs processes instead of threads for the sake of code simplicity.
 
 	P.P.S. This version may be buggy (tested only on my home PC). That's why it is a beta :) 
+
+
